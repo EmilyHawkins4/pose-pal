@@ -35,8 +35,8 @@ export default function PoseCard({ pose, index, displayLanguage }: PoseCardProps
         to={`/pose/${pose.id}`}
         className="group block rounded-lg bg-card shadow-soft hover:shadow-card transition-all duration-300 overflow-hidden"
       >
-        <div className="relative aspect-square bg-sage-light flex items-center justify-center">
-          <span className="text-6xl group-hover:scale-110 transition-transform duration-300">{pose.emoji}</span>
+        <div className="relative aspect-square bg-sage-light flex items-center justify-center p-4">
+          <img src={pose.image} alt={pose.englishName} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300" />
           <button
             onClick={(e) => {
               e.preventDefault();

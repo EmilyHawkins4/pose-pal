@@ -111,7 +111,7 @@ export default function Flashcards() {
                 {!flipped ? (
                   <>
                     {mode === "image-to-name" ? (
-                      <span className="text-8xl mb-4">{current.emoji}</span>
+                      <img src={current.image} alt="Yoga pose" className="w-48 h-48 object-contain mb-4" />
                     ) : (
                       <>
                         <p className="font-display text-2xl font-bold">{current.englishName}</p>
@@ -134,7 +134,7 @@ export default function Flashcards() {
                       </>
                     ) : (
                       <>
-                        <span className="text-8xl mb-4">{current.emoji}</span>
+                        <img src={current.image} alt={current.englishName} className="w-48 h-48 object-contain mb-4" />
                         <p className="text-xs text-muted-foreground font-body mt-4 capitalize">{current.category} · {current.difficulty}</p>
                       </>
                     )}

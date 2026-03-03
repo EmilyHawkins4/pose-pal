@@ -15,7 +15,7 @@ function shuffleArray<T>(arr: T[]): T[] {
 
 interface QuizQuestion {
   poseId: string;
-  emoji: string;
+  image: string;
   correctAnswer: string;
   options: string[];
   type: "image-to-english" | "image-to-sanskrit" | "english-to-sanskrit";
@@ -45,7 +45,7 @@ function generateQuiz(count: number = 10): QuizQuestion[] {
 
     return {
       poseId: pose.id,
-      emoji: pose.emoji,
+      image: pose.image,
       correctAnswer,
       options: shuffleArray([correctAnswer, ...distractors]),
       type,
@@ -155,8 +155,8 @@ export default function Quiz() {
           >
             {/* Prompt */}
             {question.type !== "english-to-sanskrit" && (
-              <div className="w-32 h-32 mx-auto rounded-2xl bg-sage-light flex items-center justify-center mb-4">
-                <span className="text-6xl">{question.emoji}</span>
+              <div className="w-40 h-40 mx-auto rounded-2xl bg-sage-light flex items-center justify-center mb-4 p-4">
+                <img src={question.image} alt="Yoga pose" className="max-h-full max-w-full object-contain" />
               </div>
             )}
             <p className="font-display text-xl font-semibold text-center mb-6">{getPromptText()}</p>

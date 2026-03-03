@@ -27,14 +27,14 @@ export default function PoseDetail() {
     <div className="min-h-screen pb-20">
       {/* Header */}
       <div className="relative">
-        <div className="aspect-[4/3] bg-sage-light flex items-center justify-center">
-          <motion.span
+        <div className="aspect-[4/3] bg-sage-light flex items-center justify-center p-8">
+          <motion.img
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="text-8xl"
-          >
-            {pose.emoji}
-          </motion.span>
+            src={pose.image}
+            alt={pose.englishName}
+            className="max-h-full max-w-full object-contain"
+          />
         </div>
         <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
           <Link
