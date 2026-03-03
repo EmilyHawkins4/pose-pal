@@ -9,6 +9,7 @@ export interface YogaPose {
   description: string;
   alignmentCues: string[];
   emoji: string;
+  image: string;
 }
 
 export const CATEGORIES: { value: PoseCategory; label: string; emoji: string }[] = [
@@ -32,6 +33,7 @@ export const poses: YogaPose[] = [
     description: "The foundation of all standing poses. Stand tall with feet together, grounding evenly through all four corners of each foot.",
     alignmentCues: ["Feet together or hip-width apart", "Engage quadriceps", "Lengthen tailbone toward floor", "Roll shoulders back and down", "Crown of head reaches toward ceiling"],
     emoji: "🏔️",
+    image: "/images/poses/mountain.png",
   },
   {
     id: "warrior-1",
@@ -42,6 +44,7 @@ export const poses: YogaPose[] = [
     description: "A powerful standing pose that strengthens the legs and opens the hips and chest, building focus and stability.",
     alignmentCues: ["Front knee over ankle at 90°", "Back foot at 45° angle", "Hips squared forward", "Arms extended overhead", "Gaze forward or slightly up"],
     emoji: "⚔️",
+    image: "/images/poses/warrior-1.png",
   },
   {
     id: "warrior-2",
@@ -52,6 +55,7 @@ export const poses: YogaPose[] = [
     description: "A strong, open stance that builds stamina and concentration while stretching the hips and inner thighs.",
     alignmentCues: ["Front knee stacked over ankle", "Arms parallel to floor", "Hips open to side", "Gaze over front fingertips", "Back foot parallel to short edge of mat"],
     emoji: "🗡️",
+    image: "/images/poses/warrior-2.png",
   },
   {
     id: "warrior-3",
@@ -62,6 +66,7 @@ export const poses: YogaPose[] = [
     description: "An energizing balance pose that strengthens the legs, core, and back while improving focus and coordination.",
     alignmentCues: ["Standing leg strong and straight", "Body forms T-shape", "Hips level and squared down", "Arms reaching forward or alongside body", "Flex lifted foot, toes point down"],
     emoji: "✈️",
+    image: "/images/poses/warrior-3.png",
   },
   {
     id: "tree",
@@ -72,6 +77,7 @@ export const poses: YogaPose[] = [
     description: "A classic balance pose that builds focus and stability, connecting you to a sense of grounding and calm.",
     alignmentCues: ["Foot on inner thigh or calf, never on knee", "Standing leg strong", "Hips level", "Hands at heart or overhead", "Fix gaze on a steady point"],
     emoji: "🌳",
+    image: "/images/poses/tree.png",
   },
   {
     id: "triangle",
@@ -82,6 +88,7 @@ export const poses: YogaPose[] = [
     description: "A foundational standing pose that stretches the hamstrings, hips, and spine while building strength in the legs.",
     alignmentCues: ["Legs straight, front foot forward", "Reach forward then tilt sideways", "Bottom hand on shin or block", "Top arm extends to ceiling", "Open chest toward sky"],
     emoji: "📐",
+    image: "/images/poses/triangle.png",
   },
   {
     id: "downward-dog",
@@ -92,6 +99,7 @@ export const poses: YogaPose[] = [
     description: "One of the most recognized poses in yoga. An inverted V-shape that stretches the entire back body and builds upper body strength.",
     alignmentCues: ["Hands shoulder-width apart", "Feet hip-width apart", "Hips press up and back", "Spine long, head between upper arms", "Heels reach toward floor"],
     emoji: "🐕",
+    image: "/images/poses/downward-dog.png",
   },
   {
     id: "cobra",
@@ -102,6 +110,7 @@ export const poses: YogaPose[] = [
     description: "A gentle backbend that strengthens the spine and opens the chest and shoulders.",
     alignmentCues: ["Hands under shoulders", "Elbows close to body", "Lift chest using back muscles", "Shoulders away from ears", "Legs and feet pressing into mat"],
     emoji: "🐍",
+    image: "/images/poses/cobra.png",
   },
   {
     id: "childs-pose",
@@ -112,6 +121,7 @@ export const poses: YogaPose[] = [
     description: "A restful pose that gently stretches the hips, thighs, and back. Perfect for rest and recovery.",
     alignmentCues: ["Knees together or wide", "Hips sink toward heels", "Arms extended forward or alongside body", "Forehead rests on mat", "Breathe into back body"],
     emoji: "🧒",
+    image: "/images/poses/childs-pose.png",
   },
   {
     id: "seated-forward-fold",
@@ -122,6 +132,7 @@ export const poses: YogaPose[] = [
     description: "A deep stretch for the entire back of the body, promoting calm and introspection.",
     alignmentCues: ["Sit tall on sit bones", "Legs extended straight", "Hinge from hips, not waist", "Reach toward feet", "Keep spine long"],
     emoji: "🦶",
+    image: "/images/poses/seated-forward-fold.png",
   },
   {
     id: "crow",
@@ -132,6 +143,7 @@ export const poses: YogaPose[] = [
     description: "An arm balance that builds tremendous core and upper body strength while developing focus and courage.",
     alignmentCues: ["Hands shoulder-width apart", "Knees rest on backs of upper arms", "Lean forward, lifting feet", "Round upper back", "Gaze slightly forward on floor"],
     emoji: "🐦‍⬛",
+    image: "/images/poses/crow.png",
   },
   {
     id: "pigeon",
@@ -142,6 +154,7 @@ export const poses: YogaPose[] = [
     description: "A deep hip opener that stretches the hip flexors and rotators, often releasing stored tension.",
     alignmentCues: ["Front shin angled across mat", "Back leg extends straight behind", "Hips squared toward front", "Walk hands forward to fold", "Use a block under hip if needed"],
     emoji: "🕊️",
+    image: "/images/poses/pigeon.png",
   },
   {
     id: "bridge",
@@ -152,6 +165,7 @@ export const poses: YogaPose[] = [
     description: "A gentle backbend that opens the chest and strengthens the legs, glutes, and spine.",
     alignmentCues: ["Feet hip-width, close to sit bones", "Press feet into floor to lift hips", "Roll shoulders under, clasp hands", "Knees stay parallel", "Chin slightly tucked"],
     emoji: "🌉",
+    image: "/images/poses/bridge.png",
   },
   {
     id: "corpse",
@@ -162,6 +176,7 @@ export const poses: YogaPose[] = [
     description: "The ultimate relaxation pose. Lying flat on the back, releasing all effort and surrendering to stillness.",
     alignmentCues: ["Lie flat on back", "Arms alongside body, palms up", "Feet fall open naturally", "Close eyes", "Release all muscular effort"],
     emoji: "🧘",
+    image: "/images/poses/corpse.png",
   },
   {
     id: "headstand",
@@ -172,6 +187,7 @@ export const poses: YogaPose[] = [
     description: "Known as the king of asanas, this full inversion builds core strength, balance, and mental clarity.",
     alignmentCues: ["Forearms on mat, fingers interlaced", "Crown of head on mat, cradled by hands", "Walk feet in, hips over shoulders", "Lift legs slowly using core", "Body in one straight line"],
     emoji: "🤸",
+    image: "/images/poses/headstand.png",
   },
   {
     id: "half-moon",
@@ -182,6 +198,7 @@ export const poses: YogaPose[] = [
     description: "A challenging balance pose that builds strength and flexibility in the legs, hips, and core.",
     alignmentCues: ["Standing leg straight and strong", "Bottom hand on floor or block", "Top leg parallel to floor", "Open hips and chest to side", "Top arm reaches to ceiling"],
     emoji: "🌓",
+    image: "/images/poses/half-moon.png",
   },
   {
     id: "boat",
@@ -192,6 +209,7 @@ export const poses: YogaPose[] = [
     description: "A core-strengthening pose that builds abdominal power and hip flexor strength.",
     alignmentCues: ["Sit on sit bones", "Lean back slightly", "Lift legs to 45°", "Arms parallel to floor", "Chest lifted, spine straight"],
     emoji: "⛵",
+    image: "/images/poses/boat.png",
   },
   {
     id: "twisted-chair",
@@ -202,6 +220,7 @@ export const poses: YogaPose[] = [
     description: "A twist combined with a squat that detoxifies and strengthens the legs while improving spinal mobility.",
     alignmentCues: ["Feet together, knees bent", "Hands at heart center", "Twist from mid-spine", "Hook elbow outside opposite knee", "Keep knees level"],
     emoji: "🪑",
+    image: "/images/poses/twisted-chair.png",
   },
   {
     id: "supine-twist",
@@ -212,6 +231,7 @@ export const poses: YogaPose[] = [
     description: "A gentle reclining twist that releases tension in the spine and hips while promoting relaxation.",
     alignmentCues: ["Lie on back, arms in T-shape", "Draw one knee to chest", "Guide knee across body", "Keep both shoulders on mat", "Turn head opposite to knee"],
     emoji: "🌀",
+    image: "/images/poses/supine-twist.png",
   },
   {
     id: "camel",
@@ -222,6 +242,7 @@ export const poses: YogaPose[] = [
     description: "A deep backbend performed from kneeling that opens the entire front body and builds spinal flexibility.",
     alignmentCues: ["Kneel with hips over knees", "Hands on lower back first", "Lift chest toward ceiling", "Reach hands to heels", "Keep hips pressing forward"],
     emoji: "🐫",
+    image: "/images/poses/camel.png",
   },
 ];
 
