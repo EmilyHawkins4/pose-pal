@@ -262,19 +262,19 @@ export default function Sequence() {
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto p-3">
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
                   {filteredPoses.map((pose) => (
                     <button
                       key={pose.id}
                       onClick={() => addPose(pose.id)}
                       className="text-left bg-card rounded-lg shadow-soft hover:shadow-card transition-shadow overflow-hidden active:scale-[0.98]"
                     >
-                      <div className="aspect-square bg-sage-light flex items-center justify-center p-3">
+                      <div className="aspect-square bg-sage-light flex items-center justify-center p-2">
                         <img src={pose.image} alt={pose.englishName} className="w-full h-full object-contain" />
                       </div>
-                      <div className="p-2">
-                        <p className="font-display text-sm leading-tight truncate">{pose.englishName}</p>
-                        <p className="text-[11px] text-muted-foreground font-body truncate">{pose.sanskritName}</p>
+                      <div className="p-1.5">
+                        <p className="font-display text-xs leading-tight truncate">{pose.englishName}</p>
+                        <p className="text-[10px] text-muted-foreground font-body truncate">{pose.sanskritName}</p>
                       </div>
                     </button>
                   ))}
