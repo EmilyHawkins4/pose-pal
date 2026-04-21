@@ -10,6 +10,7 @@ import SearchPage from "./pages/SearchPage";
 import Flashcards from "./pages/Flashcards";
 import Quiz from "./pages/Quiz";
 import Learn from "./pages/Learn";
+import Sequence from "./pages/Sequence";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/flashcards" element={<Flashcards />} />
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/learn" element={<Learn />} />
+          <Route path="/sequence" element={<Sequence />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </HashRouter>

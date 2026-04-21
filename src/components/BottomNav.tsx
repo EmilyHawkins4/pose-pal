@@ -1,10 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Search, Layers, Brain } from "lucide-react";
+import { Home, Search, Layers, Brain, ListOrdered } from "lucide-react";
 
 const navItems = [
   { to: "/", icon: Home, label: "Home" },
   { to: "/browse", icon: Layers, label: "Browse" },
   { to: "/search", icon: Search, label: "Search" },
+  { to: "/sequence", icon: ListOrdered, label: "Sequence" },
   { to: "/learn", icon: Brain, label: "Learn" },
 ];
 
