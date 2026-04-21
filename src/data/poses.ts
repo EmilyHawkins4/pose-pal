@@ -563,6 +563,17 @@ export const poses: YogaPose[] = [
     emoji: "🐕",
     image: "/images/poses/three-legged-dog.png",
   },
+  {
+    id: "forward-fold",
+    englishName: "Forward Fold",
+    sanskritName: "Uttānāsana",
+    category: "forward-fold",
+    difficulty: "beginner",
+    description: "A standing forward bend that lengthens the hamstrings and spine, calms the nervous system, and relieves tension in the back and neck.",
+    alignmentCues: ["Feet hip-width apart", "Hinge from the hips, not the waist", "Soft bend in the knees if needed", "Let the head and neck hang heavy", "Lengthen the spine on each inhale"],
+    emoji: "🙇",
+    image: "/images/poses/forward-fold.png",
+  },
 ];
 
 export function getPosesByCategory(category: PoseCategory): YogaPose[] {
