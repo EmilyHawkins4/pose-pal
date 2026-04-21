@@ -93,7 +93,7 @@ function SortableRow({
 }
 
 export default function Sequence() {
-  const { language } = useLanguagePreference();
+  const { language, setLanguage } = useLanguagePreference();
   const [sequence, setSequence] = useState<SequenceItem[]>([]);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [playerOpen, setPlayerOpen] = useState(false);
@@ -151,7 +151,7 @@ export default function Sequence() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <LanguageToggle />
+            <LanguageToggle language={language} onChange={setLanguage} />
             {sequence.length > 0 && (
               <button
                 onClick={() => setSequence([])}
