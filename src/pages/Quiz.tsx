@@ -1,8 +1,8 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { poses } from "@/data/poses";
 import BottomNav from "@/components/BottomNav";
-import { CheckCircle2, XCircle, RotateCcw, Trophy } from "lucide-react";
+import { CheckCircle2, XCircle, RotateCcw, Trophy, ArrowLeft } from "lucide-react";
 
 function shuffleArray<T>(arr: T[]): T[] {
   const shuffled = [...arr];
@@ -13,34 +13,57 @@ function shuffleArray<T>(arr: T[]): T[] {
   return shuffled;
 }
 
+type QuizMode =
+  | "image-to-english"
+  | "image-to-sanskrit"
+  | "english-to-sanskrit"
+  | "sanskrit-to-english"
+  | "mixed-no-images"
+  | "mixed-all";
+
 interface QuizQuestion {
   poseId: string;
   image: string;
   correctAnswer: string;
   options: string[];
-  type: "image-to-english" | "image-to-sanskrit" | "english-to-sanskrit";
+  type: Exclude<QuizMode, "mixed-no-images" | "mixed-all">;
 }
 
-function generateQuiz(count: number = 10): QuizQuestion[] {
+const QUIZ_MODES: { id: QuizMode; title: string; description: string; emoji: string }[] = [
+  { id: "image-to-english", title: "Picture → English", description: "See the pose, name it in English", emoji: "🖼️" },
+  { id: "image-to-sanskrit", title: "Picture → Sanskrit", description: "See the pose, name it in Sanskrit", emoji: "🧘" },
+  { id: "english-to-sanskrit", title: "English → Sanskrit", description: "Translate English to Sanskrit", emoji: "🔤" },
+  { id: "sanskrit-to-english", title: "Sanskrit → English", description: "Translate Sanskrit to English", emoji: "📖" },
+  { id: "mixed-no-images", title: "Mixed (text only)", description: "Names only, no pictures", emoji: "✍️" },
+  { id: "mixed-all", title: "Mixed (everything)", description: "All question types", emoji: "🎲" },
+];
+
+function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
   const shuffled = shuffleArray(poses);
   const selected = shuffled.slice(0, Math.min(count, shuffled.length));
 
-  return selected.map(pose => {
-    const types = ["image-to-english", "image-to-sanskrit", "english-to-sanskrit"] as const;
-    const type = types[Math.floor(Math.random() * types.length)];
+  return selected.map((pose) => {
+    let type: QuizQuestion["type"];
+    if (mode === "mixed-all") {
+      const all = ["image-to-english", "image-to-sanskrit", "english-to-sanskrit", "sanskrit-to-english"] as const;
+      type = all[Math.floor(Math.random() * all.length)];
+    } else if (mode === "mixed-no-images") {
+      const textOnly = ["english-to-sanskrit", "sanskrit-to-english"] as const;
+      type = textOnly[Math.floor(Math.random() * textOnly.length)];
+    } else {
+      type = mode;
+    }
 
     let correctAnswer: string;
     let distractors: string[];
+    const others = shuffleArray(poses.filter((p) => p.id !== pose.id)).slice(0, 3);
 
-    if (type === "image-to-english") {
+    if (type === "image-to-english" || type === "sanskrit-to-english") {
       correctAnswer = pose.englishName;
-      distractors = shuffleArray(poses.filter(p => p.id !== pose.id)).slice(0, 3).map(p => p.englishName);
-    } else if (type === "image-to-sanskrit") {
-      correctAnswer = pose.sanskritName;
-      distractors = shuffleArray(poses.filter(p => p.id !== pose.id)).slice(0, 3).map(p => p.sanskritName);
+      distractors = others.map((p) => p.englishName);
     } else {
       correctAnswer = pose.sanskritName;
-      distractors = shuffleArray(poses.filter(p => p.id !== pose.id)).slice(0, 3).map(p => p.sanskritName);
+      distractors = others.map((p) => p.sanskritName);
     }
 
     return {
@@ -54,22 +77,70 @@ function generateQuiz(count: number = 10): QuizQuestion[] {
 }
 
 export default function Quiz() {
-  const [questions, setQuestions] = useState(() => generateQuiz());
+  const [mode, setMode] = useState<QuizMode | null>(null);
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [currentQ, setCurrentQ] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
   const [answered, setAnswered] = useState(false);
 
+  const startQuiz = (m: QuizMode) => {
+    setMode(m);
+    setQuestions(generateQuiz(m));
+    setCurrentQ(0);
+    setSelected(null);
+    setScore(0);
+    setFinished(false);
+    setAnswered(false);
+  };
+
+  const backToModes = () => {
+    setMode(null);
+    setQuestions([]);
+    setFinished(false);
+  };
+
+  // Mode selection screen
+  if (!mode) {
+    return (
+      <div className="min-h-screen pb-24">
+        <div className="px-5 pt-12 pb-4">
+          <h1 className="font-display text-3xl font-bold">Quiz</h1>
+          <p className="font-body text-sm text-muted-foreground mt-1">Choose how you'd like to practice</p>
+        </div>
+        <div className="px-5 mt-2 space-y-3">
+          {QUIZ_MODES.map((m) => (
+            <motion.button
+              key={m.id}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => startQuiz(m.id)}
+              className="w-full flex items-center gap-4 p-4 rounded-2xl bg-card shadow-soft hover:shadow-card transition-all text-left"
+            >
+              <div className="w-12 h-12 rounded-xl bg-sage-light flex items-center justify-center text-2xl flex-shrink-0">
+                {m.emoji}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-display text-lg font-semibold text-foreground">{m.title}</p>
+                <p className="font-body text-xs text-muted-foreground mt-0.5">{m.description}</p>
+              </div>
+            </motion.button>
+          ))}
+        </div>
+        <BottomNav />
+      </div>
+    );
+  }
+
   const question = questions[currentQ];
-  const pose = poses.find(p => p.id === question?.poseId);
+  const pose = poses.find((p) => p.id === question?.poseId);
 
   const handleSelect = (option: string) => {
     if (answered) return;
     setSelected(option);
     setAnswered(true);
     if (option === question.correctAnswer) {
-      setScore(s => s + 1);
+      setScore((s) => s + 1);
     }
   };
 
@@ -77,19 +148,10 @@ export default function Quiz() {
     if (currentQ + 1 >= questions.length) {
       setFinished(true);
     } else {
-      setCurrentQ(q => q + 1);
+      setCurrentQ((q) => q + 1);
       setSelected(null);
       setAnswered(false);
     }
-  };
-
-  const restart = () => {
-    setQuestions(generateQuiz());
-    setCurrentQ(0);
-    setSelected(null);
-    setScore(0);
-    setFinished(false);
-    setAnswered(false);
   };
 
   if (finished) {
@@ -109,20 +171,31 @@ export default function Quiz() {
           <p className="font-display text-lg mt-3">
             {pct >= 80 ? "Amazing! 🎉" : pct >= 50 ? "Good effort! 💪" : "Keep practicing! 🧘"}
           </p>
-          <button
-            onClick={restart}
-            className="mt-6 flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-body font-medium mx-auto"
-          >
-            <RotateCcw className="w-4 h-4" /> Try Again
-          </button>
+          <div className="flex gap-3 justify-center mt-6">
+            <button
+              onClick={() => startQuiz(mode)}
+              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-body font-medium"
+            >
+              <RotateCcw className="w-4 h-4" /> Try Again
+            </button>
+            <button
+              onClick={backToModes}
+              className="px-6 py-3 rounded-xl bg-muted text-foreground font-body font-medium"
+            >
+              Change Mode
+            </button>
+          </div>
         </motion.div>
         <BottomNav />
       </div>
     );
   }
 
+  const showImage = question.type === "image-to-english" || question.type === "image-to-sanskrit";
+
   const getPromptText = () => {
     if (question.type === "english-to-sanskrit") return `What is "${pose?.englishName}" in Sanskrit?`;
+    if (question.type === "sanskrit-to-english") return `What is "${pose?.sanskritName}" in English?`;
     if (question.type === "image-to-sanskrit") return "What is the Sanskrit name?";
     return "What is the English name?";
   };
@@ -131,10 +204,17 @@ export default function Quiz() {
     <div className="min-h-screen pb-20">
       <div className="px-5 pt-12 pb-4">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="font-display text-3xl font-bold">Quiz</h1>
-          <span className="font-body text-sm text-muted-foreground">{currentQ + 1}/{questions.length}</span>
+          <button
+            onClick={backToModes}
+            className="flex items-center gap-1 font-body text-sm text-muted-foreground hover:text-foreground"
+            aria-label="Back to quiz modes"
+          >
+            <ArrowLeft className="w-4 h-4" /> Modes
+          </button>
+          <span className="font-body text-sm text-muted-foreground">
+            {currentQ + 1}/{questions.length}
+          </span>
         </div>
-        {/* Progress bar */}
         <div className="h-1 bg-muted rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-primary rounded-full"
@@ -153,15 +233,13 @@ export default function Quiz() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
           >
-            {/* Prompt */}
-            {question.type !== "english-to-sanskrit" && (
+            {showImage && (
               <div className="w-40 h-40 mx-auto rounded-2xl bg-sage-light flex items-center justify-center mb-4 p-4">
                 <img src={question.image} alt="Yoga pose" className="max-h-full max-w-full object-contain" />
               </div>
             )}
             <p className="font-display text-xl font-semibold text-center mb-6">{getPromptText()}</p>
 
-            {/* Options */}
             <div className="space-y-3 max-w-sm mx-auto">
               {question.options.map((option) => {
                 const isCorrect = option === question.correctAnswer;
@@ -170,7 +248,8 @@ export default function Quiz() {
                 let optionStyle = "bg-card shadow-soft hover:shadow-card text-foreground";
                 if (answered) {
                   if (isCorrect) optionStyle = "bg-sage-light text-primary ring-2 ring-primary";
-                  else if (isSelected && !isCorrect) optionStyle = "bg-destructive/10 text-destructive ring-2 ring-destructive";
+                  else if (isSelected && !isCorrect)
+                    optionStyle = "bg-destructive/10 text-destructive ring-2 ring-destructive";
                   else optionStyle = "bg-muted text-muted-foreground opacity-60";
                 }
 
@@ -183,13 +262,14 @@ export default function Quiz() {
                   >
                     <span>{option}</span>
                     {answered && isCorrect && <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0" />}
-                    {answered && isSelected && !isCorrect && <XCircle className="w-5 h-5 text-destructive flex-shrink-0" />}
+                    {answered && isSelected && !isCorrect && (
+                      <XCircle className="w-5 h-5 text-destructive flex-shrink-0" />
+                    )}
                   </button>
                 );
               })}
             </div>
 
-            {/* Next button */}
             {answered && (
               <motion.div
                 initial={{ opacity: 0, y: 8 }}
