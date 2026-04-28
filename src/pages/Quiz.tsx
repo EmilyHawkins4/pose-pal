@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { poses } from "@/data/poses";
+import { sanskritRoots } from "@/data/sanskritRoots";
 import BottomNav from "@/components/BottomNav";
 import { CheckCircle2, XCircle, RotateCcw, Trophy, ArrowLeft } from "lucide-react";
 
@@ -19,31 +20,64 @@ type QuizMode =
   | "english-to-sanskrit"
   | "sanskrit-to-english"
   | "mixed-no-images"
-  | "mixed-all";
+  | "mixed-all"
+  | "roots-sanskrit-to-meaning"
+  | "roots-meaning-to-sanskrit";
 
 interface QuizQuestion {
-  poseId: string;
-  image: string;
+  poseId?: string;
+  image?: string;
+  promptOverride?: string;
   correctAnswer: string;
   options: string[];
-  type: Exclude<QuizMode, "mixed-no-images" | "mixed-all">;
+  type: QuizMode;
 }
 
-const QUIZ_MODES: { id: QuizMode; title: string; description: string; emoji: string }[] = [
-  { id: "image-to-english", title: "Picture → English", description: "See the pose, name it in English", emoji: "🖼️" },
-  { id: "image-to-sanskrit", title: "Picture → Sanskrit", description: "See the pose, name it in Sanskrit", emoji: "🧘" },
-  { id: "english-to-sanskrit", title: "English → Sanskrit", description: "Translate English to Sanskrit", emoji: "🔤" },
-  { id: "sanskrit-to-english", title: "Sanskrit → English", description: "Translate Sanskrit to English", emoji: "📖" },
-  { id: "mixed-no-images", title: "Mixed (text only)", description: "Names only, no pictures", emoji: "✍️" },
-  { id: "mixed-all", title: "Mixed (everything)", description: "All question types", emoji: "🎲" },
+const QUIZ_MODES: { id: QuizMode; title: string; description: string; emoji: string; group: "asanas" | "roots" }[] = [
+  { id: "image-to-english", title: "Picture → English", description: "See the pose, name it in English", emoji: "🖼️", group: "asanas" },
+  { id: "image-to-sanskrit", title: "Picture → Sanskrit", description: "See the pose, name it in Sanskrit", emoji: "🧘", group: "asanas" },
+  { id: "english-to-sanskrit", title: "English → Sanskrit", description: "Translate English to Sanskrit", emoji: "🔤", group: "asanas" },
+  { id: "sanskrit-to-english", title: "Sanskrit → English", description: "Translate Sanskrit to English", emoji: "📖", group: "asanas" },
+  { id: "mixed-no-images", title: "Mixed (text only)", description: "Names only, no pictures", emoji: "✍️", group: "asanas" },
+  { id: "mixed-all", title: "Mixed (everything)", description: "All asana question types", emoji: "🎲", group: "asanas" },
+  { id: "roots-sanskrit-to-meaning", title: "Root → Meaning", description: "What does this Sanskrit root mean?", emoji: "🌱", group: "roots" },
+  { id: "roots-meaning-to-sanskrit", title: "Meaning → Root", description: "What's the Sanskrit for this meaning?", emoji: "🪷", group: "roots" },
 ];
 
 function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
+  // Roots quizzes
+  if (mode === "roots-sanskrit-to-meaning" || mode === "roots-meaning-to-sanskrit") {
+    const shuffled = shuffleArray(sanskritRoots);
+    const selected = shuffled.slice(0, Math.min(count, shuffled.length));
+    return selected.map((root) => {
+      const others = shuffleArray(sanskritRoots.filter((r) => r.id !== root.id)).slice(0, 3);
+      if (mode === "roots-sanskrit-to-meaning") {
+        const correctAnswer = root.meaning;
+        const distractors = others.map((r) => r.meaning);
+        return {
+          promptOverride: `What does "${root.sanskrit}" mean?`,
+          correctAnswer,
+          options: shuffleArray([correctAnswer, ...distractors]),
+          type: mode,
+        };
+      } else {
+        const correctAnswer = root.sanskrit;
+        const distractors = others.map((r) => r.sanskrit);
+        return {
+          promptOverride: `Which Sanskrit root means "${root.meaning}"?`,
+          correctAnswer,
+          options: shuffleArray([correctAnswer, ...distractors]),
+          type: mode,
+        };
+      }
+    });
+  }
+
   const shuffled = shuffleArray(poses);
   const selected = shuffled.slice(0, Math.min(count, shuffled.length));
 
   return selected.map((pose) => {
-    let type: QuizQuestion["type"];
+    let type: QuizMode;
     if (mode === "mixed-all") {
       const all = ["image-to-english", "image-to-sanskrit", "english-to-sanskrit", "sanskrit-to-english"] as const;
       type = all[Math.floor(Math.random() * all.length)];
@@ -103,29 +137,35 @@ export default function Quiz() {
 
   // Mode selection screen
   if (!mode) {
+    const asanaModes = QUIZ_MODES.filter((m) => m.group === "asanas");
+    const rootModes = QUIZ_MODES.filter((m) => m.group === "roots");
+    const renderBtn = (m: typeof QUIZ_MODES[number]) => (
+      <motion.button
+        key={m.id}
+        whileTap={{ scale: 0.98 }}
+        onClick={() => startQuiz(m.id)}
+        className="w-full flex items-center gap-4 p-4 rounded-2xl bg-card shadow-soft hover:shadow-card transition-all text-left"
+      >
+        <div className="w-12 h-12 rounded-xl bg-sage-light flex items-center justify-center text-2xl flex-shrink-0">
+          {m.emoji}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-display text-lg font-semibold text-foreground">{m.title}</p>
+          <p className="font-body text-xs text-muted-foreground mt-0.5">{m.description}</p>
+        </div>
+      </motion.button>
+    );
     return (
       <div className="min-h-screen pb-24">
         <div className="px-5 pt-12 pb-4">
           <h1 className="font-display text-3xl font-bold">Quiz</h1>
           <p className="font-body text-sm text-muted-foreground mt-1">Choose how you'd like to practice</p>
         </div>
-        <div className="px-5 mt-2 space-y-3">
-          {QUIZ_MODES.map((m) => (
-            <motion.button
-              key={m.id}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => startQuiz(m.id)}
-              className="w-full flex items-center gap-4 p-4 rounded-2xl bg-card shadow-soft hover:shadow-card transition-all text-left"
-            >
-              <div className="w-12 h-12 rounded-xl bg-sage-light flex items-center justify-center text-2xl flex-shrink-0">
-                {m.emoji}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-display text-lg font-semibold text-foreground">{m.title}</p>
-                <p className="font-body text-xs text-muted-foreground mt-0.5">{m.description}</p>
-              </div>
-            </motion.button>
-          ))}
+        <div className="px-5 mt-2">
+          <h2 className="font-display text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-2">Asanas</h2>
+          <div className="space-y-3">{asanaModes.map(renderBtn)}</div>
+          <h2 className="font-display text-sm font-semibold text-muted-foreground uppercase tracking-wide mt-6 mb-2">Sanskrit Roots</h2>
+          <div className="space-y-3">{rootModes.map(renderBtn)}</div>
         </div>
         <BottomNav />
       </div>
@@ -194,6 +234,7 @@ export default function Quiz() {
   const showImage = question.type === "image-to-english" || question.type === "image-to-sanskrit";
 
   const getPromptText = () => {
+    if (question.promptOverride) return question.promptOverride;
     if (question.type === "english-to-sanskrit") return `What is "${pose?.englishName}" in Sanskrit?`;
     if (question.type === "sanskrit-to-english") return `What is "${pose?.sanskritName}" in English?`;
     if (question.type === "image-to-sanskrit") return "What is the Sanskrit name?";
