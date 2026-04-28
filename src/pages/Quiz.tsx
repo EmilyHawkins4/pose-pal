@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { poses } from "@/data/poses";
+import { sanskritRoots } from "@/data/sanskritRoots";
 import BottomNav from "@/components/BottomNav";
 import { CheckCircle2, XCircle, RotateCcw, Trophy, ArrowLeft } from "lucide-react";
 
@@ -19,23 +20,28 @@ type QuizMode =
   | "english-to-sanskrit"
   | "sanskrit-to-english"
   | "mixed-no-images"
-  | "mixed-all";
+  | "mixed-all"
+  | "roots-sanskrit-to-meaning"
+  | "roots-meaning-to-sanskrit";
 
 interface QuizQuestion {
-  poseId: string;
-  image: string;
+  poseId?: string;
+  image?: string;
+  promptOverride?: string;
   correctAnswer: string;
   options: string[];
-  type: Exclude<QuizMode, "mixed-no-images" | "mixed-all">;
+  type: QuizMode;
 }
 
-const QUIZ_MODES: { id: QuizMode; title: string; description: string; emoji: string }[] = [
-  { id: "image-to-english", title: "Picture → English", description: "See the pose, name it in English", emoji: "🖼️" },
-  { id: "image-to-sanskrit", title: "Picture → Sanskrit", description: "See the pose, name it in Sanskrit", emoji: "🧘" },
-  { id: "english-to-sanskrit", title: "English → Sanskrit", description: "Translate English to Sanskrit", emoji: "🔤" },
-  { id: "sanskrit-to-english", title: "Sanskrit → English", description: "Translate Sanskrit to English", emoji: "📖" },
-  { id: "mixed-no-images", title: "Mixed (text only)", description: "Names only, no pictures", emoji: "✍️" },
-  { id: "mixed-all", title: "Mixed (everything)", description: "All question types", emoji: "🎲" },
+const QUIZ_MODES: { id: QuizMode; title: string; description: string; emoji: string; group: "asanas" | "roots" }[] = [
+  { id: "image-to-english", title: "Picture → English", description: "See the pose, name it in English", emoji: "🖼️", group: "asanas" },
+  { id: "image-to-sanskrit", title: "Picture → Sanskrit", description: "See the pose, name it in Sanskrit", emoji: "🧘", group: "asanas" },
+  { id: "english-to-sanskrit", title: "English → Sanskrit", description: "Translate English to Sanskrit", emoji: "🔤", group: "asanas" },
+  { id: "sanskrit-to-english", title: "Sanskrit → English", description: "Translate Sanskrit to English", emoji: "📖", group: "asanas" },
+  { id: "mixed-no-images", title: "Mixed (text only)", description: "Names only, no pictures", emoji: "✍️", group: "asanas" },
+  { id: "mixed-all", title: "Mixed (everything)", description: "All asana question types", emoji: "🎲", group: "asanas" },
+  { id: "roots-sanskrit-to-meaning", title: "Root → Meaning", description: "What does this Sanskrit root mean?", emoji: "🌱", group: "roots" },
+  { id: "roots-meaning-to-sanskrit", title: "Meaning → Root", description: "What's the Sanskrit for this meaning?", emoji: "🪷", group: "roots" },
 ];
 
 function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
