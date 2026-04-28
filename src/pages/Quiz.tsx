@@ -137,29 +137,35 @@ export default function Quiz() {
 
   // Mode selection screen
   if (!mode) {
+    const asanaModes = QUIZ_MODES.filter((m) => m.group === "asanas");
+    const rootModes = QUIZ_MODES.filter((m) => m.group === "roots");
+    const renderBtn = (m: typeof QUIZ_MODES[number]) => (
+      <motion.button
+        key={m.id}
+        whileTap={{ scale: 0.98 }}
+        onClick={() => startQuiz(m.id)}
+        className="w-full flex items-center gap-4 p-4 rounded-2xl bg-card shadow-soft hover:shadow-card transition-all text-left"
+      >
+        <div className="w-12 h-12 rounded-xl bg-sage-light flex items-center justify-center text-2xl flex-shrink-0">
+          {m.emoji}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-display text-lg font-semibold text-foreground">{m.title}</p>
+          <p className="font-body text-xs text-muted-foreground mt-0.5">{m.description}</p>
+        </div>
+      </motion.button>
+    );
     return (
       <div className="min-h-screen pb-24">
         <div className="px-5 pt-12 pb-4">
           <h1 className="font-display text-3xl font-bold">Quiz</h1>
           <p className="font-body text-sm text-muted-foreground mt-1">Choose how you'd like to practice</p>
         </div>
-        <div className="px-5 mt-2 space-y-3">
-          {QUIZ_MODES.map((m) => (
-            <motion.button
-              key={m.id}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => startQuiz(m.id)}
-              className="w-full flex items-center gap-4 p-4 rounded-2xl bg-card shadow-soft hover:shadow-card transition-all text-left"
-            >
-              <div className="w-12 h-12 rounded-xl bg-sage-light flex items-center justify-center text-2xl flex-shrink-0">
-                {m.emoji}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-display text-lg font-semibold text-foreground">{m.title}</p>
-                <p className="font-body text-xs text-muted-foreground mt-0.5">{m.description}</p>
-              </div>
-            </motion.button>
-          ))}
+        <div className="px-5 mt-2">
+          <h2 className="font-display text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-2">Asanas</h2>
+          <div className="space-y-3">{asanaModes.map(renderBtn)}</div>
+          <h2 className="font-display text-sm font-semibold text-muted-foreground uppercase tracking-wide mt-6 mb-2">Sanskrit Roots</h2>
+          <div className="space-y-3">{rootModes.map(renderBtn)}</div>
         </div>
         <BottomNav />
       </div>
