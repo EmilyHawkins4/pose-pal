@@ -45,11 +45,39 @@ const QUIZ_MODES: { id: QuizMode; title: string; description: string; emoji: str
 ];
 
 function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
+  // Roots quizzes
+  if (mode === "roots-sanskrit-to-meaning" || mode === "roots-meaning-to-sanskrit") {
+    const shuffled = shuffleArray(sanskritRoots);
+    const selected = shuffled.slice(0, Math.min(count, shuffled.length));
+    return selected.map((root) => {
+      const others = shuffleArray(sanskritRoots.filter((r) => r.id !== root.id)).slice(0, 3);
+      if (mode === "roots-sanskrit-to-meaning") {
+        const correctAnswer = root.meaning;
+        const distractors = others.map((r) => r.meaning);
+        return {
+          promptOverride: `What does "${root.sanskrit}" mean?`,
+          correctAnswer,
+          options: shuffleArray([correctAnswer, ...distractors]),
+          type: mode,
+        };
+      } else {
+        const correctAnswer = root.sanskrit;
+        const distractors = others.map((r) => r.sanskrit);
+        return {
+          promptOverride: `Which Sanskrit root means "${root.meaning}"?`,
+          correctAnswer,
+          options: shuffleArray([correctAnswer, ...distractors]),
+          type: mode,
+        };
+      }
+    });
+  }
+
   const shuffled = shuffleArray(poses);
   const selected = shuffled.slice(0, Math.min(count, shuffled.length));
 
   return selected.map((pose) => {
-    let type: QuizQuestion["type"];
+    let type: QuizMode;
     if (mode === "mixed-all") {
       const all = ["image-to-english", "image-to-sanskrit", "english-to-sanskrit", "sanskrit-to-english"] as const;
       type = all[Math.floor(Math.random() * all.length)];
