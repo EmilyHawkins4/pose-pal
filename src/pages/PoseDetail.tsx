@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { poses } from "@/data/poses";
+import { poseBreakdowns } from "@/data/sanskritRoots";
 import { ArrowLeft, Bookmark } from "lucide-react";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { motion } from "framer-motion";
@@ -71,6 +72,26 @@ export default function PoseDetail() {
         <p className="font-display text-lg text-muted-foreground italic">{pose.sanskritName}</p>
 
         <p className="font-body text-sm text-foreground/80 mt-4 leading-relaxed">{pose.description}</p>
+
+        {poseBreakdowns[pose.id] && (
+          <div className="mt-6">
+            <h2 className="font-display text-xl font-semibold mb-3">Sanskrit Breakdown</h2>
+            <div className="rounded-2xl bg-sage-light p-4 space-y-2">
+              {poseBreakdowns[pose.id].map((token, i) => (
+                <div key={i} className="flex items-baseline justify-between gap-3">
+                  <span className="font-display text-base font-semibold text-foreground">{token.word}</span>
+                  <span className="font-body text-sm text-foreground/70 text-right">{token.meaning}</span>
+                </div>
+              ))}
+              <Link
+                to="/roots"
+                className="block mt-3 pt-3 border-t border-border/50 font-body text-xs text-primary hover:underline"
+              >
+                Learn more Sanskrit roots →
+              </Link>
+            </div>
+          </div>
+        )}
 
         <div className="mt-6">
           <h2 className="font-display text-xl font-semibold mb-3">Alignment Cues</h2>
