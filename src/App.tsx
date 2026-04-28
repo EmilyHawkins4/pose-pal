@@ -12,6 +12,7 @@ import Quiz from "./pages/Quiz";
 import Learn from "./pages/Learn";
 import Sequence from "./pages/Sequence";
 import SanskritRoots from "./pages/SanskritRoots";
+import RootDetail from "./pages/RootDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/learn" element={<Learn />} />
           <Route path="/sequence" element={<Sequence />} />
           <Route path="/roots" element={<SanskritRoots />} />
+          <Route path="/roots/:id" element={<RootDetail />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </HashRouter>

@@ -77,12 +77,30 @@ export default function PoseDetail() {
           <div className="mt-6">
             <h2 className="font-display text-xl font-semibold mb-3">Sanskrit Breakdown</h2>
             <div className="rounded-2xl bg-sage-light p-4 space-y-2">
-              {poseBreakdowns[pose.id].map((token, i) => (
-                <div key={i} className="flex items-baseline justify-between gap-3">
-                  <span className="font-display text-base font-semibold text-foreground">{token.word}</span>
-                  <span className="font-body text-sm text-foreground/70 text-right">{token.meaning}</span>
-                </div>
-              ))}
+              {poseBreakdowns[pose.id].map((token, i) => {
+                const row = (
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="font-display text-base font-semibold text-foreground">
+                      {token.word}
+                      {token.rootId && (
+                        <span className="ml-1.5 font-body text-xs text-primary not-italic">↗</span>
+                      )}
+                    </span>
+                    <span className="font-body text-sm text-foreground/70 text-right">{token.meaning}</span>
+                  </div>
+                );
+                return token.rootId ? (
+                  <Link
+                    key={i}
+                    to={`/roots/${token.rootId}`}
+                    className="block -mx-2 px-2 py-1 rounded-lg hover:bg-background/40 transition-colors"
+                  >
+                    {row}
+                  </Link>
+                ) : (
+                  <div key={i}>{row}</div>
+                );
+              })}
               <Link
                 to="/roots"
                 className="block mt-3 pt-3 border-t border-border/50 font-body text-xs text-primary hover:underline"
