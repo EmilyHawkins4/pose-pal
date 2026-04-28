@@ -234,6 +234,7 @@ export default function Quiz() {
   const showImage = question.type === "image-to-english" || question.type === "image-to-sanskrit";
 
   const getPromptText = () => {
+    if (question.promptOverride) return question.promptOverride;
     if (question.type === "english-to-sanskrit") return `What is "${pose?.englishName}" in Sanskrit?`;
     if (question.type === "sanskrit-to-english") return `What is "${pose?.sanskritName}" in English?`;
     if (question.type === "image-to-sanskrit") return "What is the Sanskrit name?";
