@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FlipHorizontal, Brain } from "lucide-react";
+import { FlipHorizontal, Brain, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 import BottomNav from "@/components/BottomNav";
 
@@ -34,6 +34,19 @@ export default function Learn() {
             <h2 className="font-display text-2xl font-bold text-foreground">Quiz</h2>
             <p className="font-body text-sm text-muted-foreground mt-1">
               Test your knowledge with multiple-choice questions and track your score.
+            </p>
+          </Link>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}>
+          <Link
+            to="/roots"
+            className="block p-6 rounded-2xl bg-muted group"
+          >
+            <BookOpen className="w-10 h-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
+            <h2 className="font-display text-2xl font-bold text-foreground">Sanskrit Roots</h2>
+            <p className="font-body text-sm text-muted-foreground mt-1">
+              Decode asana names by learning the root words they're built from.
             </p>
           </Link>
         </motion.div>
