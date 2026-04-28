@@ -22,7 +22,8 @@ type QuizMode =
   | "mixed-no-images"
   | "mixed-all"
   | "roots-sanskrit-to-meaning"
-  | "roots-meaning-to-sanskrit";
+  | "roots-meaning-to-sanskrit"
+  | "roots-devanagari-to-meaning";
 
 interface QuizQuestion {
   poseId?: string;
@@ -42,11 +43,16 @@ const QUIZ_MODES: { id: QuizMode; title: string; description: string; emoji: str
   { id: "mixed-all", title: "Mixed (everything)", description: "All asana question types", emoji: "🎲", group: "asanas" },
   { id: "roots-sanskrit-to-meaning", title: "Root → Meaning", description: "What does this Sanskrit root mean?", emoji: "🌱", group: "roots" },
   { id: "roots-meaning-to-sanskrit", title: "Meaning → Root", description: "What's the Sanskrit for this meaning?", emoji: "🪷", group: "roots" },
+  { id: "roots-devanagari-to-meaning", title: "Devanāgarī → Meaning", description: "Recognize the script and name the meaning", emoji: "🕉️", group: "roots" },
 ];
 
 function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
   // Roots quizzes
-  if (mode === "roots-sanskrit-to-meaning" || mode === "roots-meaning-to-sanskrit") {
+  if (
+    mode === "roots-sanskrit-to-meaning" ||
+    mode === "roots-meaning-to-sanskrit" ||
+    mode === "roots-devanagari-to-meaning"
+  ) {
     const shuffled = shuffleArray(sanskritRoots);
     const selected = shuffled.slice(0, Math.min(count, shuffled.length));
     return selected.map((root) => {
@@ -56,6 +62,15 @@ function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
         const distractors = others.map((r) => r.meaning);
         return {
           promptOverride: `What does "${root.sanskrit}" mean?`,
+          correctAnswer,
+          options: shuffleArray([correctAnswer, ...distractors]),
+          type: mode,
+        };
+      } else if (mode === "roots-devanagari-to-meaning") {
+        const correctAnswer = root.meaning;
+        const distractors = others.map((r) => r.meaning);
+        return {
+          promptOverride: `What does "${root.devanagari}" (${root.sanskrit}) mean?`,
           correctAnswer,
           options: shuffleArray([correctAnswer, ...distractors]),
           type: mode,
