@@ -500,7 +500,7 @@ export const poses: YogaPose[] = [
   {
     id: "baby-backbend",
     englishName: "Baby Backbend",
-    sanskritName: "Ardha Ānanda Balāsana",
+    sanskritName: "Ardha Cakrāsana",
     category: "backbend",
     difficulty: "beginner",
     description: "A gentle standing backbend with cactus arms that opens the chest and front body, building confidence for deeper backbends.",
