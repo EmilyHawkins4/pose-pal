@@ -346,6 +346,26 @@ export const poseBreakdowns: Record<string, PoseBreakdownToken[]> = {
     { word: "Uttāna", rootId: "uttana", meaning: "intense stretch" },
     { word: "āsana", rootId: "asana", meaning: "pose" },
   ],
+  "crescent-lunge-airplane": [
+    { word: "Parivṛtta", rootId: "parivrtta", meaning: "revolved" },
+    { word: "Añjaneya", rootId: "anjaneya", meaning: "son of Añjanā" },
+    { word: "āsana", rootId: "asana", meaning: "pose" },
+  ],
+  "easy-seat": [
+    { word: "Sukha", rootId: "sukha", meaning: "easy / comfortable" },
+    { word: "āsana", rootId: "asana", meaning: "pose" },
+  ],
+  "puppy": [
+    { word: "Uttāna", rootId: "uttana", meaning: "extended" },
+    { word: "Śiśu", rootId: "sisu", meaning: "puppy / child" },
+    { word: "āsana", rootId: "asana", meaning: "pose" },
+  ],
+  "upward-dog": [
+    { word: "Ūrdhva", rootId: "urdhva", meaning: "upward" },
+    { word: "Mukha", rootId: "mukha", meaning: "facing" },
+    { word: "Śvāna", rootId: "svana", meaning: "dog" },
+    { word: "āsana", rootId: "asana", meaning: "pose" },
+  ],
 };
 
 export const ROOT_CATEGORY_LABELS: Record<SanskritRoot["category"], { label: string; emoji: string }> = {
