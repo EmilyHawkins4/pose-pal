@@ -314,8 +314,7 @@ export const poseBreakdowns: Record<string, PoseBreakdownToken[]> = {
   ],
   "baby-backbend": [
     { word: "Ardha", rootId: "ardha", meaning: "half" },
-    { word: "Ānanda", rootId: "ananda", meaning: "bliss" },
-    { word: "Bāla", rootId: "bala", meaning: "child" },
+    { word: "Cakra", rootId: "cakra", meaning: "wheel" },
     { word: "āsana", rootId: "asana", meaning: "pose" },
   ],
   "star": [
