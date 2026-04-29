@@ -1,8 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import { Layers, Brain, ListOrdered } from "lucide-react";
+import { Home, Layers, Brain, ListOrdered } from "lucide-react";
 
 const navItems = [
-  { to: "/", icon: Layers, label: "Browse", match: ["/", "/pose"] },
+  { to: "/", icon: Home, label: "Home", match: ["/"], exact: true },
+  { to: "/browse", icon: Layers, label: "Browse", match: ["/browse", "/pose"] },
   { to: "/sequence", icon: ListOrdered, label: "Sequence", match: ["/sequence"] },
   { to: "/learn", icon: Brain, label: "Learn", match: ["/learn", "/flashcards", "/quiz", "/roots"] },
 ];
@@ -13,10 +14,10 @@ export default function BottomNav() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-t border-border safe-area-bottom">
       <div className="flex items-center justify-around h-16 max-w-lg mx-auto">
-        {navItems.map(({ to, icon: Icon, label, match }) => {
-          const active = match.some((m) =>
-            m === "/" ? location.pathname === "/" : location.pathname.startsWith(m)
-          );
+        {navItems.map(({ to, icon: Icon, label, match, exact }) => {
+          const active = exact
+            ? location.pathname === to
+            : match.some((m) => location.pathname.startsWith(m));
           return (
             <Link
               key={to}
