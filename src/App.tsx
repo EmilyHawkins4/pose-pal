@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
+import Index from "./pages/Index";
 import Browse from "./pages/Browse";
 import PoseDetail from "./pages/PoseDetail";
 import Flashcards from "./pages/Flashcards";
@@ -22,9 +23,9 @@ const App = () => (
       <Sonner />
       <HashRouter>
         <Routes>
-          <Route path="/" element={<Browse />} />
-          <Route path="/browse" element={<Navigate to="/" replace />} />
-          <Route path="/search" element={<Navigate to="/" replace />} />
+          <Route path="/" element={<Index />} />
+          <Route path="/browse" element={<Browse />} />
+          <Route path="/search" element={<Navigate to="/browse" replace />} />
           <Route path="/pose/:id" element={<PoseDetail />} />
           <Route path="/flashcards" element={<Flashcards />} />
           <Route path="/quiz" element={<Quiz />} />
