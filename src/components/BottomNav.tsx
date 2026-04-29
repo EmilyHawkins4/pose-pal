@@ -1,12 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Search, Layers, Brain, ListOrdered } from "lucide-react";
+import { Layers, Brain, ListOrdered } from "lucide-react";
 
 const navItems = [
-  { to: "/", icon: Home, label: "Home" },
-  { to: "/browse", icon: Layers, label: "Browse" },
-  { to: "/search", icon: Search, label: "Search" },
-  { to: "/sequence", icon: ListOrdered, label: "Sequence" },
-  { to: "/learn", icon: Brain, label: "Learn" },
+  { to: "/", icon: Layers, label: "Browse", match: ["/", "/pose"] },
+  { to: "/sequence", icon: ListOrdered, label: "Sequence", match: ["/sequence"] },
+  { to: "/learn", icon: Brain, label: "Learn", match: ["/learn", "/flashcards", "/quiz", "/roots"] },
 ];
 
 export default function BottomNav() {
@@ -15,8 +13,10 @@ export default function BottomNav() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-t border-border safe-area-bottom">
       <div className="flex items-center justify-around h-16 max-w-lg mx-auto">
-        {navItems.map(({ to, icon: Icon, label }) => {
-          const active = location.pathname === to || (to !== "/" && location.pathname.startsWith(to));
+        {navItems.map(({ to, icon: Icon, label, match }) => {
+          const active = match.some((m) =>
+            m === "/" ? location.pathname === "/" : location.pathname.startsWith(m)
+          );
           return (
             <Link
               key={to}
