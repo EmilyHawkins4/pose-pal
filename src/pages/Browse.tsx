@@ -1,16 +1,25 @@
 import { useState } from "react";
-import { poses, CATEGORIES, type PoseCategory } from "@/data/poses";
+import { Link } from "react-router-dom";
+import { Search, X, Bookmark } from "lucide-react";
+import { poses, searchPoses, CATEGORIES, type PoseCategory } from "@/data/poses";
 import PoseCard from "@/components/PoseCard";
 import BottomNav from "@/components/BottomNav";
 import LanguageToggle from "@/components/LanguageToggle";
 import { useLanguagePreference } from "@/hooks/useLanguagePreference";
+import { useBookmarks } from "@/hooks/useBookmarks";
 import { motion } from "framer-motion";
 
 export default function Browse() {
   const [selectedCategory, setSelectedCategory] = useState<PoseCategory | "all">("all");
+  const [query, setQuery] = useState("");
   const { language, setLanguage } = useLanguagePreference();
+  const { bookmarks } = useBookmarks();
+  const bookmarkedPoses = poses.filter((p) => bookmarks.includes(p.id));
 
-  const filtered = selectedCategory === "all" ? poses : poses.filter(p => p.category === selectedCategory);
+  const trimmedQuery = query.trim();
+  const baseList = trimmedQuery ? searchPoses(trimmedQuery) : poses;
+  const filtered =
+    selectedCategory === "all" ? baseList : baseList.filter((p) => p.category === selectedCategory);
 
   return (
     <div className="min-h-screen pb-20">
@@ -18,6 +27,27 @@ export default function Browse() {
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-display text-3xl font-bold">Browse Poses</h1>
           <LanguageToggle language={language} onChange={setLanguage} />
+        </div>
+
+        {/* Search */}
+        <div className="relative mb-3">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search by English or Sanskrit name..."
+            className="w-full pl-9 pr-9 py-2.5 rounded-xl bg-muted font-body text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+          />
+          {query && (
+            <button
+              onClick={() => setQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2"
+              aria-label="Clear search"
+            >
+              <X className="w-4 h-4 text-muted-foreground" />
+            </button>
+          )}
         </div>
 
         {/* Category pills */}
@@ -48,10 +78,31 @@ export default function Browse() {
         </div>
       </div>
 
-      <motion.div
-        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 px-5"
-        layout
-      >
+      {/* Bookmarked */}
+      {bookmarkedPoses.length > 0 && !trimmedQuery && selectedCategory === "all" && (
+        <div className="px-5 mb-6">
+          <div className="flex items-center gap-2 mb-3">
+            <Bookmark className="w-4 h-4 text-accent" />
+            <h2 className="font-display text-xl font-semibold">Bookmarked</h2>
+          </div>
+          <div className="flex gap-3 overflow-x-auto pb-2 -mx-5 px-5 scrollbar-hide">
+            {bookmarkedPoses.map((pose) => (
+              <Link
+                key={pose.id}
+                to={`/pose/${pose.id}`}
+                className="flex-shrink-0 w-24 text-center"
+              >
+                <div className="w-20 h-20 mx-auto rounded-xl bg-sage-light flex items-center justify-center text-3xl shadow-soft">
+                  {pose.emoji}
+                </div>
+                <p className="text-xs font-body mt-1.5 text-foreground truncate">{pose.englishName}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <motion.div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 px-5" layout>
         {filtered.map((pose, i) => (
           <PoseCard key={pose.id} pose={pose} index={i} displayLanguage={language} />
         ))}
@@ -59,7 +110,10 @@ export default function Browse() {
 
       {filtered.length === 0 && (
         <div className="text-center py-16">
-          <p className="text-muted-foreground font-body">No poses in this category yet.</p>
+          <p className="text-3xl mb-2">🔍</p>
+          <p className="text-muted-foreground font-body">
+            {trimmedQuery ? "No poses found. Try another term." : "No poses in this category yet."}
+          </p>
         </div>
       )}
 
