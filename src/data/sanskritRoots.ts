@@ -90,6 +90,9 @@ export const sanskritRoots: SanskritRoot[] = [
   { id: "bala", sanskrit: "bāla", simple: "bala", devanagari: "बाल", pronunciation: "BAH-lah", meaning: "child", category: "quality", example: "Bālāsana (Child's Pose)" },
   { id: "uttana", sanskrit: "uttāna", simple: "uttana", devanagari: "उत्तान", pronunciation: "oo-TAH-nah", meaning: "intense stretch", category: "quality", example: "Uttānāsana (Forward Fold), Paścimottānāsana", notes: "Literally 'intense extension' — uttānāsana is the foundational forward fold." },
   { id: "raja", sanskrit: "rāja", simple: "raja", devanagari: "राज", pronunciation: "RAH-jah", meaning: "king / royal", category: "quality", example: "Rājakapotāsana (King Pigeon)", notes: "Marks the 'king' or fullest expression of a pose family." },
+  { id: "sukha", sanskrit: "sukha", simple: "sukha", devanagari: "सुख", pronunciation: "SOO-kah", meaning: "easy / comfortable / pleasant", category: "quality", example: "Sukhāsana (Easy Seat)", notes: "Literally 'good space.' Opposite of duḥkha (suffering). Cues a comfortable, sustainable seat for meditation." },
+  { id: "sisu", sanskrit: "śiśu", simple: "sisu", devanagari: "शिशु", pronunciation: "SHEE-shoo", meaning: "child / puppy", category: "shape", example: "Uttāna Śiśoāsana (Puppy Pose)", notes: "Used for 'puppy pose' — the extended-child shape with the chest melting toward the floor." },
+  { id: "cakra", sanskrit: "cakra", simple: "cakra", devanagari: "चक्र", pronunciation: "CHUK-rah", meaning: "wheel", category: "shape", example: "Ardha Cakrāsana (Half Wheel / standing backbend)", notes: "Pronounced with 'ch,' not 'k.' Same word as the energetic 'chakras.' Cues a rounded, wheel-like backbend." },
 
   // ============ Actions & Concepts ============
   { id: "bandha", sanskrit: "bandha", simple: "bandha", devanagari: "बन्ध", pronunciation: "BUN-dah", meaning: "lock / bind / energetic seal", category: "action", example: "Setu Bandha Sarvāṅgāsana; also Mūla Bandha, Uḍḍīyāna Bandha", notes: "In pranayama, refers to the three energetic locks — root, abdominal, throat.", relatedRootIds: ["baddha"] },
@@ -311,8 +314,7 @@ export const poseBreakdowns: Record<string, PoseBreakdownToken[]> = {
   ],
   "baby-backbend": [
     { word: "Ardha", rootId: "ardha", meaning: "half" },
-    { word: "Ānanda", rootId: "ananda", meaning: "bliss" },
-    { word: "Bāla", rootId: "bala", meaning: "child" },
+    { word: "Cakra", rootId: "cakra", meaning: "wheel" },
     { word: "āsana", rootId: "asana", meaning: "pose" },
   ],
   "star": [
@@ -342,6 +344,26 @@ export const poseBreakdowns: Record<string, PoseBreakdownToken[]> = {
   ],
   "forward-fold": [
     { word: "Uttāna", rootId: "uttana", meaning: "intense stretch" },
+    { word: "āsana", rootId: "asana", meaning: "pose" },
+  ],
+  "crescent-lunge-airplane": [
+    { word: "Parivṛtta", rootId: "parivrtta", meaning: "revolved" },
+    { word: "Añjaneya", rootId: "anjaneya", meaning: "son of Añjanā" },
+    { word: "āsana", rootId: "asana", meaning: "pose" },
+  ],
+  "easy-seat": [
+    { word: "Sukha", rootId: "sukha", meaning: "easy / comfortable" },
+    { word: "āsana", rootId: "asana", meaning: "pose" },
+  ],
+  "puppy": [
+    { word: "Uttāna", rootId: "uttana", meaning: "extended" },
+    { word: "Śiśu", rootId: "sisu", meaning: "puppy / child" },
+    { word: "āsana", rootId: "asana", meaning: "pose" },
+  ],
+  "upward-dog": [
+    { word: "Ūrdhva", rootId: "urdhva", meaning: "upward" },
+    { word: "Mukha", rootId: "mukha", meaning: "facing" },
+    { word: "Śvāna", rootId: "svana", meaning: "dog" },
     { word: "āsana", rootId: "asana", meaning: "pose" },
   ],
 };
