@@ -4,6 +4,8 @@ import { Search, X, Bookmark } from "lucide-react";
 import { poses, searchPoses, CATEGORIES, type PoseCategory } from "@/data/poses";
 import PoseCard from "@/components/PoseCard";
 import LanguageToggle from "@/components/LanguageToggle";
+import SectionTabs from "@/components/SectionTabs";
+import { ASANAS_TABS } from "@/pages/Asanas";
 import { useLanguagePreference } from "@/hooks/useLanguagePreference";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { motion } from "framer-motion";
