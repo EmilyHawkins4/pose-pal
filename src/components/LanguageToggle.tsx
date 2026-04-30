@@ -13,14 +13,14 @@ const options: { value: DisplayLanguage; label: string }[] = [
 
 export default function LanguageToggle({ language, onChange }: LanguageToggleProps) {
   return (
-    <div className="flex items-center gap-0.5 bg-muted rounded-full p-0.5">
+    <div className="inline-flex items-center gap-1 bg-muted rounded-full p-1">
       {options.map(({ value, label }) => (
         <button
           key={value}
           onClick={() => onChange(value)}
-          className={`px-3 py-1 text-xs font-body font-medium rounded-full transition-all ${
+          className={`px-3.5 py-1.5 text-sm font-body font-medium rounded-full transition-all whitespace-nowrap ${
             language === value
-              ? "bg-primary text-primary-foreground shadow-sm"
+              ? "bg-background text-foreground shadow-soft"
               : "text-muted-foreground hover:text-foreground"
           }`}
         >
