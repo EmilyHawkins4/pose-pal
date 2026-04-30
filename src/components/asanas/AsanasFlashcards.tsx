@@ -48,13 +48,15 @@ export default function AsanasFlashcards() {
 
   return (
     <div>
-      <div className="px-5 pb-2 flex items-center justify-end">
+      <div className="px-5 pb-2 flex items-center justify-between gap-2">
+        <SectionTabs tabs={ASANAS_TABS} />
         <button
           onClick={() => setMode((m) => (m === "image-to-name" ? "name-to-image" : "image-to-name"))}
-          className="p-2 rounded-lg bg-muted text-muted-foreground hover:text-foreground transition-colors"
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-muted text-muted-foreground hover:text-foreground text-sm font-body font-medium transition-colors whitespace-nowrap"
           aria-label="Switch mode"
         >
           <Shuffle className="w-4 h-4" />
+          {mode === "image-to-name" ? "Img→Name" : "Name→Img"}
         </button>
       </div>
 
