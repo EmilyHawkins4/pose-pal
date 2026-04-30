@@ -434,7 +434,7 @@ export const poses: YogaPose[] = [
   {
     id: "crescent-lunge",
     englishName: "Crescent Lunge",
-    sanskritName: "Aṅjaneyāsana",
+    sanskritName: "Aṣṭa Chandrāsana",
     category: "standing",
     difficulty: "beginner",
     description: "A high lunge variation that strengthens the legs and opens the hip flexors while building balance and focus.",
