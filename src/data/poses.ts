@@ -577,7 +577,7 @@ export const poses: YogaPose[] = [
   {
     id: "crescent-lunge-airplane",
     englishName: "Crescent Lunge with Airplane Arms",
-    sanskritName: "Parivṛtta Aṅjaneyāsana",
+    sanskritName: "Aṣṭa Chandrāsana Variation",
     category: "standing",
     difficulty: "intermediate",
     description: "A crescent lunge halfway-fold variation with arms sweeping back like airplane wings — opens the chest and shoulders while building balance and leg strength.",
