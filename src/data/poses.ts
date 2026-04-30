@@ -478,7 +478,7 @@ export const poses: YogaPose[] = [
   {
     id: "crescent-lunge-twist",
     englishName: "Crescent Lunge Twist",
-    sanskritName: "Parivrtta Aṅjaneyāsana",
+    sanskritName: "Parivṛtta Aṣṭa Chandrāsana",
     category: "twist",
     difficulty: "intermediate",
     description: "A deep twisting lunge that strengthens the legs while wringing out the spine, improving balance and detoxifying the body.",
