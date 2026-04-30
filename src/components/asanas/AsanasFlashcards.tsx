@@ -2,6 +2,8 @@ import { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { poses, CATEGORIES, type PoseCategory } from "@/data/poses";
 import { ArrowRight, RotateCcw, Shuffle } from "lucide-react";
+import SectionTabs from "@/components/SectionTabs";
+import { ASANAS_TABS } from "@/pages/Asanas";
 
 function shuffleArray<T>(arr: T[]): T[] {
   const shuffled = [...arr];
