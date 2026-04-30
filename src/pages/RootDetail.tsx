@@ -31,7 +31,7 @@ export default function RootDetail() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-muted-foreground font-body">Root not found.</p>
-          <Link to="/roots" className="text-primary font-body text-sm mt-2 inline-block">
+          <Link to="/vocab" className="text-primary font-body text-sm mt-2 inline-block">
             ← Back to Roots
           </Link>
         </div>
@@ -45,7 +45,7 @@ export default function RootDetail() {
     <div className="min-h-screen pb-24">
       <div className="px-5 pt-12 pb-2">
         <Link
-          to="/roots"
+          to="/vocab"
           className="inline-flex items-center gap-1 font-body text-sm text-muted-foreground hover:text-foreground mb-3"
         >
           <ArrowLeft className="w-4 h-4" /> All roots
