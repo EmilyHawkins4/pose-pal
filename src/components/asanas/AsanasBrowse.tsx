@@ -29,7 +29,8 @@ export default function AsanasBrowse() {
   return (
     <div>
       <div className="px-5 pb-2">
-        <div className="flex items-center justify-end mb-2">
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <SectionTabs tabs={ASANAS_TABS} />
           <LanguageToggle language={language} onChange={setLanguage} />
         </div>
 
