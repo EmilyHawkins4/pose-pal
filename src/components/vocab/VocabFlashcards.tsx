@@ -2,6 +2,8 @@ import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { sanskritRoots } from "@/data/sanskritRoots";
 import { ArrowRight, RotateCcw, Shuffle } from "lucide-react";
+import SectionTabs from "@/components/SectionTabs";
+import { VOCAB_TABS } from "@/pages/Vocab";
 
 function shuffleArray<T>(arr: T[]): T[] {
   const shuffled = [...arr];
