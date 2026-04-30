@@ -16,7 +16,7 @@ export default function PoseDetail() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-muted-foreground font-body">Pose not found.</p>
-          <Link to="/browse" className="text-primary font-body text-sm mt-2 inline-block">← Back to Browse</Link>
+          <Link to="/asanas" className="text-primary font-body text-sm mt-2 inline-block">← Back to Browse</Link>
         </div>
       </div>
     );
@@ -39,7 +39,7 @@ export default function PoseDetail() {
         </div>
         <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
           <Link
-            to="/browse"
+            to="/asanas"
             className="w-9 h-9 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -102,7 +102,7 @@ export default function PoseDetail() {
                 );
               })}
               <Link
-                to="/roots"
+                to="/vocab"
                 className="block mt-3 pt-3 border-t border-border/50 font-body text-xs text-primary hover:underline"
               >
                 Learn more Sanskrit roots →

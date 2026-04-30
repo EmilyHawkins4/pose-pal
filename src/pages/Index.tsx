@@ -7,10 +7,10 @@ import { poses } from "@/data/poses";
 import BottomNav from "@/components/BottomNav";
 
 const features = [
-  { to: "/browse", icon: Layers, label: "Browse Poses", desc: "Explore the full catalog", color: "bg-sage-light text-primary" },
-  { to: "/flashcards", icon: FlipHorizontal, label: "Flashcards", desc: "Learn by flipping cards", color: "bg-terracotta-light text-accent" },
-  { to: "/quiz", icon: Brain, label: "Quiz", desc: "Test your knowledge", color: "bg-sage-light text-primary" },
-  { to: "/roots", icon: BookOpen, label: "Sanskrit Roots", desc: "Decode pose names", color: "bg-terracotta-light text-accent" },
+  { to: "/asanas", icon: Layers, label: "Browse Asanas", desc: "Search the full catalog", color: "bg-sage-light text-primary" },
+  { to: "/asanas/flashcards", icon: FlipHorizontal, label: "Flashcards", desc: "Learn by flipping cards", color: "bg-terracotta-light text-accent" },
+  { to: "/asanas/quiz", icon: Brain, label: "Quiz", desc: "Test your knowledge", color: "bg-sage-light text-primary" },
+  { to: "/vocab", icon: BookOpen, label: "Sanskrit Vocab", desc: "Decode pose names", color: "bg-terracotta-light text-accent" },
 ];
 
 export default function Index() {

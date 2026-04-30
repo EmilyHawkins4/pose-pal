@@ -4,13 +4,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
-import Browse from "./pages/Browse";
+import Asanas from "./pages/Asanas";
+import Vocab from "./pages/Vocab";
 import PoseDetail from "./pages/PoseDetail";
-import Flashcards from "./pages/Flashcards";
-import Quiz from "./pages/Quiz";
-import Learn from "./pages/Learn";
 import Sequence from "./pages/Sequence";
-import SanskritRoots from "./pages/SanskritRoots";
 import RootDetail from "./pages/RootDetail";
 import NotFound from "./pages/NotFound";
 
@@ -24,15 +21,32 @@ const App = () => (
       <HashRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/browse" element={<Browse />} />
-          <Route path="/search" element={<Navigate to="/browse" replace />} />
-          <Route path="/pose/:id" element={<PoseDetail />} />
-          <Route path="/flashcards" element={<Flashcards />} />
-          <Route path="/quiz" element={<Quiz />} />
-          <Route path="/learn" element={<Learn />} />
+
+          {/* Asanas hub */}
+          <Route path="/asanas" element={<Asanas />} />
+          <Route path="/asanas/flashcards" element={<Asanas />} />
+          <Route path="/asanas/quiz" element={<Asanas />} />
+
+          {/* Vocab hub */}
+          <Route path="/vocab" element={<Vocab />} />
+          <Route path="/vocab/flashcards" element={<Vocab />} />
+          <Route path="/vocab/quiz" element={<Vocab />} />
+
+          {/* Sequence */}
           <Route path="/sequence" element={<Sequence />} />
-          <Route path="/roots" element={<SanskritRoots />} />
+
+          {/* Pose & root details */}
+          <Route path="/pose/:id" element={<PoseDetail />} />
           <Route path="/roots/:id" element={<RootDetail />} />
+
+          {/* Legacy redirects */}
+          <Route path="/browse" element={<Navigate to="/asanas" replace />} />
+          <Route path="/search" element={<Navigate to="/asanas" replace />} />
+          <Route path="/flashcards" element={<Navigate to="/asanas/flashcards" replace />} />
+          <Route path="/quiz" element={<Navigate to="/asanas/quiz" replace />} />
+          <Route path="/roots" element={<Navigate to="/vocab" replace />} />
+          <Route path="/learn" element={<Navigate to="/asanas" replace />} />
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </HashRouter>

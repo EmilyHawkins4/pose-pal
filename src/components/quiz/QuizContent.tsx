@@ -2,7 +2,6 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { poses } from "@/data/poses";
 import { sanskritRoots } from "@/data/sanskritRoots";
-import BottomNav from "@/components/BottomNav";
 import { CheckCircle2, XCircle, RotateCcw, Trophy, ArrowLeft } from "lucide-react";
 
 function shuffleArray<T>(arr: T[]): T[] {
@@ -14,7 +13,7 @@ function shuffleArray<T>(arr: T[]): T[] {
   return shuffled;
 }
 
-type QuizMode =
+export type QuizMode =
   | "image-to-english"
   | "image-to-sanskrit"
   | "english-to-sanskrit"
@@ -23,7 +22,8 @@ type QuizMode =
   | "mixed-all"
   | "roots-sanskrit-to-meaning"
   | "roots-meaning-to-sanskrit"
-  | "roots-devanagari-to-meaning";
+  | "roots-devanagari-to-meaning"
+  | "roots-mixed";
 
 interface QuizQuestion {
   poseId?: string;
@@ -34,55 +34,59 @@ interface QuizQuestion {
   type: QuizMode;
 }
 
-const QUIZ_MODES: { id: QuizMode; title: string; description: string; emoji: string; group: "asanas" | "roots" }[] = [
-  { id: "image-to-english", title: "Picture → English", description: "See the pose, name it in English", emoji: "🖼️", group: "asanas" },
-  { id: "image-to-sanskrit", title: "Picture → Sanskrit", description: "See the pose, name it in Sanskrit", emoji: "🧘", group: "asanas" },
-  { id: "english-to-sanskrit", title: "English → Sanskrit", description: "Translate English to Sanskrit", emoji: "🔤", group: "asanas" },
-  { id: "sanskrit-to-english", title: "Sanskrit → English", description: "Translate Sanskrit to English", emoji: "📖", group: "asanas" },
-  { id: "mixed-no-images", title: "Mixed (text only)", description: "Names only, no pictures", emoji: "✍️", group: "asanas" },
-  { id: "mixed-all", title: "Mixed (everything)", description: "All asana question types", emoji: "🎲", group: "asanas" },
+interface ModeMeta {
+  id: QuizMode;
+  title: string;
+  description: string;
+  emoji: string;
+  group: "asanas" | "roots";
+}
+
+const ALL_MODES: ModeMeta[] = [
+  { id: "image-to-english", title: "Picture ↔ English", description: "See the pose, name it in English", emoji: "🖼️", group: "asanas" },
+  { id: "image-to-sanskrit", title: "Picture ↔ Sanskrit", description: "See the pose, name it in Sanskrit", emoji: "🧘", group: "asanas" },
+  { id: "english-to-sanskrit", title: "English ↔ Sanskrit", description: "Translate between English and Sanskrit", emoji: "🔤", group: "asanas" },
+  { id: "mixed-all", title: "Mixed (everything)", description: "Every possible combination", emoji: "🎲", group: "asanas" },
   { id: "roots-sanskrit-to-meaning", title: "Root → Meaning", description: "What does this Sanskrit root mean?", emoji: "🌱", group: "roots" },
   { id: "roots-meaning-to-sanskrit", title: "Meaning → Root", description: "What's the Sanskrit for this meaning?", emoji: "🪷", group: "roots" },
-  { id: "roots-devanagari-to-meaning", title: "Devanāgarī → Meaning", description: "Recognize the script and name the meaning", emoji: "🕉️", group: "roots" },
+  { id: "roots-mixed", title: "Mixed roots", description: "Both directions, plus Devanāgarī", emoji: "🎲", group: "roots" },
 ];
 
 function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
   // Roots quizzes
-  if (
-    mode === "roots-sanskrit-to-meaning" ||
-    mode === "roots-meaning-to-sanskrit" ||
-    mode === "roots-devanagari-to-meaning"
-  ) {
+  if (mode.startsWith("roots-")) {
     const shuffled = shuffleArray(sanskritRoots);
     const selected = shuffled.slice(0, Math.min(count, shuffled.length));
     return selected.map((root) => {
       const others = shuffleArray(sanskritRoots.filter((r) => r.id !== root.id)).slice(0, 3);
-      if (mode === "roots-sanskrit-to-meaning") {
+      let actual = mode;
+      if (mode === "roots-mixed") {
+        const opts = ["roots-sanskrit-to-meaning", "roots-meaning-to-sanskrit", "roots-devanagari-to-meaning"] as const;
+        actual = opts[Math.floor(Math.random() * opts.length)];
+      }
+      if (actual === "roots-sanskrit-to-meaning") {
         const correctAnswer = root.meaning;
-        const distractors = others.map((r) => r.meaning);
         return {
           promptOverride: `What does "${root.sanskrit}" mean?`,
           correctAnswer,
-          options: shuffleArray([correctAnswer, ...distractors]),
-          type: mode,
+          options: shuffleArray([correctAnswer, ...others.map((r) => r.meaning)]),
+          type: actual,
         };
-      } else if (mode === "roots-devanagari-to-meaning") {
+      } else if (actual === "roots-devanagari-to-meaning") {
         const correctAnswer = root.meaning;
-        const distractors = others.map((r) => r.meaning);
         return {
           promptOverride: `What does "${root.devanagari}" (${root.sanskrit}) mean?`,
           correctAnswer,
-          options: shuffleArray([correctAnswer, ...distractors]),
-          type: mode,
+          options: shuffleArray([correctAnswer, ...others.map((r) => r.meaning)]),
+          type: actual,
         };
       } else {
         const correctAnswer = root.sanskrit;
-        const distractors = others.map((r) => r.sanskrit);
         return {
           promptOverride: `Which Sanskrit root means "${root.meaning}"?`,
           correctAnswer,
-          options: shuffleArray([correctAnswer, ...distractors]),
-          type: mode,
+          options: shuffleArray([correctAnswer, ...others.map((r) => r.sanskrit)]),
+          type: actual,
         };
       }
     });
@@ -99,6 +103,13 @@ function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
     } else if (mode === "mixed-no-images") {
       const textOnly = ["english-to-sanskrit", "sanskrit-to-english"] as const;
       type = textOnly[Math.floor(Math.random() * textOnly.length)];
+    } else if (mode === "english-to-sanskrit") {
+      // bidirectional: randomly flip direction
+      type = Math.random() < 0.5 ? "english-to-sanskrit" : "sanskrit-to-english";
+    } else if (mode === "image-to-english") {
+      type = Math.random() < 0.5 ? "image-to-english" : "sanskrit-to-english";
+    } else if (mode === "image-to-sanskrit") {
+      type = Math.random() < 0.5 ? "image-to-sanskrit" : "english-to-sanskrit";
     } else {
       type = mode;
     }
@@ -125,7 +136,12 @@ function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
   });
 }
 
-export default function Quiz() {
+interface Props {
+  scope: "asanas" | "roots";
+}
+
+/** Quiz content (no page chrome). Filtered to asana or root modes. */
+export default function QuizContent({ scope }: Props) {
   const [mode, setMode] = useState<QuizMode | null>(null);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [currentQ, setCurrentQ] = useState(0);
@@ -150,39 +166,29 @@ export default function Quiz() {
     setFinished(false);
   };
 
-  // Mode selection screen
   if (!mode) {
-    const asanaModes = QUIZ_MODES.filter((m) => m.group === "asanas");
-    const rootModes = QUIZ_MODES.filter((m) => m.group === "roots");
-    const renderBtn = (m: typeof QUIZ_MODES[number]) => (
-      <motion.button
-        key={m.id}
-        whileTap={{ scale: 0.98 }}
-        onClick={() => startQuiz(m.id)}
-        className="w-full flex items-center gap-4 p-4 rounded-2xl bg-card shadow-soft hover:shadow-card transition-all text-left"
-      >
-        <div className="w-12 h-12 rounded-xl bg-sage-light flex items-center justify-center text-2xl flex-shrink-0">
-          {m.emoji}
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="font-display text-lg font-semibold text-foreground">{m.title}</p>
-          <p className="font-body text-xs text-muted-foreground mt-0.5">{m.description}</p>
-        </div>
-      </motion.button>
-    );
+    const modes = ALL_MODES.filter((m) => m.group === scope);
     return (
-      <div className="min-h-screen pb-24">
-        <div className="px-5 pt-12 pb-4">
-          <h1 className="font-display text-3xl font-bold">Quiz</h1>
-          <p className="font-body text-sm text-muted-foreground mt-1">Choose how you'd like to practice</p>
+      <div className="px-5">
+        <p className="font-body text-sm text-muted-foreground mb-3">Choose how you'd like to practice</p>
+        <div className="space-y-3">
+          {modes.map((m) => (
+            <motion.button
+              key={m.id}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => startQuiz(m.id)}
+              className="w-full flex items-center gap-4 p-4 rounded-2xl bg-card shadow-soft hover:shadow-card transition-all text-left"
+            >
+              <div className="w-12 h-12 rounded-xl bg-sage-light flex items-center justify-center text-2xl flex-shrink-0">
+                {m.emoji}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-display text-lg font-semibold text-foreground">{m.title}</p>
+                <p className="font-body text-xs text-muted-foreground mt-0.5">{m.description}</p>
+              </div>
+            </motion.button>
+          ))}
         </div>
-        <div className="px-5 mt-2">
-          <h2 className="font-display text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-2">Asanas</h2>
-          <div className="space-y-3">{asanaModes.map(renderBtn)}</div>
-          <h2 className="font-display text-sm font-semibold text-muted-foreground uppercase tracking-wide mt-6 mb-2">Sanskrit Roots</h2>
-          <div className="space-y-3">{rootModes.map(renderBtn)}</div>
-        </div>
-        <BottomNav />
       </div>
     );
   }
@@ -212,14 +218,10 @@ export default function Quiz() {
   if (finished) {
     const pct = Math.round((score / questions.length) * 100);
     return (
-      <div className="min-h-screen pb-20 flex flex-col items-center justify-center px-5">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="text-center"
-        >
+      <div className="flex flex-col items-center justify-center px-5 py-12">
+        <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center">
           <Trophy className="w-16 h-16 text-accent mx-auto mb-4" />
-          <h1 className="font-display text-4xl font-bold">{pct}%</h1>
+          <h2 className="font-display text-4xl font-bold">{pct}%</h2>
           <p className="font-body text-muted-foreground mt-1">
             {score} out of {questions.length} correct
           </p>
@@ -233,15 +235,11 @@ export default function Quiz() {
             >
               <RotateCcw className="w-4 h-4" /> Try Again
             </button>
-            <button
-              onClick={backToModes}
-              className="px-6 py-3 rounded-xl bg-muted text-foreground font-body font-medium"
-            >
+            <button onClick={backToModes} className="px-6 py-3 rounded-xl bg-muted text-foreground font-body font-medium">
               Change Mode
             </button>
           </div>
         </motion.div>
-        <BottomNav />
       </div>
     );
   }
@@ -257,8 +255,8 @@ export default function Quiz() {
   };
 
   return (
-    <div className="min-h-screen pb-20">
-      <div className="px-5 pt-12 pb-4">
+    <div>
+      <div className="px-5 pb-2">
         <div className="flex items-center justify-between mb-2">
           <button
             onClick={backToModes}
@@ -283,12 +281,7 @@ export default function Quiz() {
 
       <div className="px-5 mt-4">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={currentQ}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-          >
+          <motion.div key={currentQ} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
             {showImage && (
               <div className="w-40 h-40 mx-auto rounded-2xl bg-sage-light flex items-center justify-center mb-4 p-4">
                 <img src={question.image} alt="Yoga pose" className="max-h-full max-w-full object-contain" />
@@ -327,11 +320,7 @@ export default function Quiz() {
             </div>
 
             {answered && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mt-6 text-center"
-              >
+              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-6 text-center">
                 <button
                   onClick={handleNext}
                   className="px-8 py-3 rounded-xl bg-primary text-primary-foreground font-body font-medium"
@@ -343,8 +332,6 @@ export default function Quiz() {
           </motion.div>
         </AnimatePresence>
       </div>
-
-      <BottomNav />
     </div>
   );
 }

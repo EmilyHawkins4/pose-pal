@@ -1,11 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Layers, Brain, ListOrdered } from "lucide-react";
+import { Home, Layers, BookOpen, ListOrdered } from "lucide-react";
 
 const navItems = [
   { to: "/", icon: Home, label: "Home", match: ["/"], exact: true },
-  { to: "/browse", icon: Layers, label: "Browse", match: ["/browse", "/pose"] },
+  { to: "/asanas", icon: Layers, label: "Asanas", match: ["/asanas", "/browse", "/flashcards", "/quiz", "/pose"] },
+  { to: "/vocab", icon: BookOpen, label: "Vocab", match: ["/vocab", "/roots"] },
   { to: "/sequence", icon: ListOrdered, label: "Sequence", match: ["/sequence"] },
-  { to: "/learn", icon: Brain, label: "Learn", match: ["/learn", "/flashcards", "/quiz", "/roots"] },
 ];
 
 export default function BottomNav() {

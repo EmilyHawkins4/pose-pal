@@ -3,13 +3,16 @@ import { Link } from "react-router-dom";
 import { Search, X, Bookmark } from "lucide-react";
 import { poses, searchPoses, CATEGORIES, type PoseCategory } from "@/data/poses";
 import PoseCard from "@/components/PoseCard";
-import BottomNav from "@/components/BottomNav";
 import LanguageToggle from "@/components/LanguageToggle";
 import { useLanguagePreference } from "@/hooks/useLanguagePreference";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { motion } from "framer-motion";
 
-export default function Browse() {
+/**
+ * Browse + search asanas content (no page chrome, no bottom nav).
+ * Embedded inside the Asanas hub.
+ */
+export default function AsanasBrowse() {
   const [selectedCategory, setSelectedCategory] = useState<PoseCategory | "all">("all");
   const [query, setQuery] = useState("");
   const { language, setLanguage } = useLanguagePreference();
@@ -22,10 +25,9 @@ export default function Browse() {
     selectedCategory === "all" ? baseList : baseList.filter((p) => p.category === selectedCategory);
 
   return (
-    <div className="min-h-screen pb-20">
-      <div className="px-5 pt-12 pb-4">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="font-display text-3xl font-bold">Browse Poses</h1>
+    <div>
+      <div className="px-5 pb-2">
+        <div className="flex items-center justify-end mb-2">
           <LanguageToggle language={language} onChange={setLanguage} />
         </div>
 
@@ -116,8 +118,6 @@ export default function Browse() {
           </p>
         </div>
       )}
-
-      <BottomNav />
     </div>
   );
 }
