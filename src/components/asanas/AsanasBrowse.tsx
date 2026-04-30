@@ -4,6 +4,8 @@ import { Search, X, Bookmark } from "lucide-react";
 import { poses, searchPoses, CATEGORIES, type PoseCategory } from "@/data/poses";
 import PoseCard from "@/components/PoseCard";
 import LanguageToggle from "@/components/LanguageToggle";
+import SectionTabs from "@/components/SectionTabs";
+import { ASANAS_TABS } from "@/pages/Asanas";
 import { useLanguagePreference } from "@/hooks/useLanguagePreference";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { motion } from "framer-motion";
@@ -27,7 +29,8 @@ export default function AsanasBrowse() {
   return (
     <div>
       <div className="px-5 pb-2">
-        <div className="flex items-center justify-end mb-2">
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <SectionTabs tabs={ASANAS_TABS} />
           <LanguageToggle language={language} onChange={setLanguage} />
         </div>
 

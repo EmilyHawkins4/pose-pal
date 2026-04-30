@@ -5,7 +5,7 @@ import VocabBrowse from "@/components/vocab/VocabBrowse";
 import VocabFlashcards from "@/components/vocab/VocabFlashcards";
 import QuizContent from "@/components/quiz/QuizContent";
 
-const TABS = [
+export const VOCAB_TABS = [
   { to: "/vocab", label: "Browse" },
   { to: "/vocab/flashcards", label: "Flashcards" },
   { to: "/vocab/quiz", label: "Quiz" },
@@ -13,6 +13,7 @@ const TABS = [
 
 export default function Vocab() {
   const { pathname } = useLocation();
+  const isFlashcards = pathname === "/vocab/flashcards";
 
   return (
     <div className="min-h-screen pb-24">
@@ -21,10 +22,10 @@ export default function Vocab() {
         <p className="font-body text-sm text-muted-foreground mb-3">
           Sanskrit roots — the building blocks of asana names.
         </p>
-        <SectionTabs tabs={TABS} />
+        {!isFlashcards && <SectionTabs tabs={VOCAB_TABS} />}
       </div>
 
-      {pathname === "/vocab/flashcards" && <VocabFlashcards />}
+      {isFlashcards && <VocabFlashcards />}
       {pathname === "/vocab/quiz" && <QuizContent scope="roots" />}
       {pathname === "/vocab" && <VocabBrowse />}
 
@@ -32,3 +33,4 @@ export default function Vocab() {
     </div>
   );
 }
+

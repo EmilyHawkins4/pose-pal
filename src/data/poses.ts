@@ -434,7 +434,7 @@ export const poses: YogaPose[] = [
   {
     id: "crescent-lunge",
     englishName: "Crescent Lunge",
-    sanskritName: "Aṅjaneyāsana",
+    sanskritName: "Aṣṭa Chandrāsana",
     category: "standing",
     difficulty: "beginner",
     description: "A high lunge variation that strengthens the legs and opens the hip flexors while building balance and focus.",
@@ -478,7 +478,7 @@ export const poses: YogaPose[] = [
   {
     id: "crescent-lunge-twist",
     englishName: "Crescent Lunge Twist",
-    sanskritName: "Parivrtta Aṅjaneyāsana",
+    sanskritName: "Parivṛtta Aṣṭa Chandrāsana",
     category: "twist",
     difficulty: "intermediate",
     description: "A deep twisting lunge that strengthens the legs while wringing out the spine, improving balance and detoxifying the body.",
@@ -577,7 +577,7 @@ export const poses: YogaPose[] = [
   {
     id: "crescent-lunge-airplane",
     englishName: "Crescent Lunge with Airplane Arms",
-    sanskritName: "Parivṛtta Aṅjaneyāsana",
+    sanskritName: "Aṣṭa Chandrāsana Variation",
     category: "standing",
     difficulty: "intermediate",
     description: "A crescent lunge halfway-fold variation with arms sweeping back like airplane wings — opens the chest and shoulders while building balance and leg strength.",

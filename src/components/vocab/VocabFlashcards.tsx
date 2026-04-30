@@ -2,6 +2,8 @@ import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { sanskritRoots } from "@/data/sanskritRoots";
 import { ArrowRight, RotateCcw, Shuffle } from "lucide-react";
+import SectionTabs from "@/components/SectionTabs";
+import { VOCAB_TABS } from "@/pages/Vocab";
 
 function shuffleArray<T>(arr: T[]): T[] {
   const shuffled = [...arr];
@@ -36,13 +38,15 @@ export default function VocabFlashcards() {
 
   return (
     <div>
-      <div className="px-5 pb-2 flex items-center justify-end">
+      <div className="px-5 pb-2 flex items-center justify-between gap-2">
+        <SectionTabs tabs={VOCAB_TABS} />
         <button
           onClick={() => setMode((m) => (m === "root-to-meaning" ? "meaning-to-root" : "root-to-meaning"))}
-          className="p-2 rounded-lg bg-muted text-muted-foreground hover:text-foreground transition-colors"
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-muted text-muted-foreground hover:text-foreground text-sm font-body font-medium transition-colors whitespace-nowrap"
           aria-label="Switch direction"
         >
           <Shuffle className="w-4 h-4" />
+          {mode === "root-to-meaning" ? "Root→Mean" : "Mean→Root"}
         </button>
       </div>
 

@@ -5,7 +5,7 @@ import AsanasBrowse from "@/components/asanas/AsanasBrowse";
 import AsanasFlashcards from "@/components/asanas/AsanasFlashcards";
 import QuizContent from "@/components/quiz/QuizContent";
 
-const TABS = [
+export const ASANAS_TABS = [
   { to: "/asanas", label: "Browse" },
   { to: "/asanas/flashcards", label: "Flashcards" },
   { to: "/asanas/quiz", label: "Quiz" },
@@ -13,19 +13,22 @@ const TABS = [
 
 export default function Asanas() {
   const { pathname } = useLocation();
+  const isQuiz = pathname === "/asanas/quiz";
 
   return (
     <div className="min-h-screen pb-24">
       <div className="px-5 pt-12 pb-3">
         <h1 className="font-display text-3xl font-bold mb-3">Asanas</h1>
-        <SectionTabs tabs={TABS} />
+        {isQuiz && <SectionTabs tabs={ASANAS_TABS} />}
       </div>
 
       {pathname === "/asanas/flashcards" && <AsanasFlashcards />}
-      {pathname === "/asanas/quiz" && <QuizContent scope="asanas" />}
+      {isQuiz && <QuizContent scope="asanas" />}
       {pathname === "/asanas" && <AsanasBrowse />}
 
       <BottomNav />
     </div>
   );
 }
+
+
