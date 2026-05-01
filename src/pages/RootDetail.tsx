@@ -59,10 +59,7 @@ export default function RootDetail() {
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-background/70 text-xs font-body text-foreground/70">
             <span>{meta.emoji}</span> {meta.label}
           </span>
-          <p className="font-display text-6xl mt-3 leading-none" lang="sa">
-            {root.devanagari}
-          </p>
-          <h1 className="font-display text-3xl font-bold mt-3 italic">{root.sanskrit}</h1>
+          <h1 className="font-display text-4xl font-bold mt-3 italic">{root.sanskrit}</h1>
           <p className="font-body text-sm text-foreground/70 mt-1 inline-flex items-center gap-1.5">
             <Volume2 className="w-3.5 h-3.5" /> {root.pronunciation}
           </p>
