@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { AnimatePresence } from "framer-motion";
-import { Plus, Play, Trash2, X, Search } from "lucide-react";
+import { Plus, Play, Trash2, X, Search, GripVertical } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -16,7 +16,7 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
-  horizontalListSortingStrategy,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { poses, type YogaPose } from "@/data/poses";
@@ -31,7 +31,7 @@ interface SequenceItem {
   poseId: string;
 }
 
-function SortableCard({
+function SortableRow({
   item,
   pose,
   language,
@@ -58,49 +58,46 @@ function SortableCard({
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
-      className="group relative shrink-0 w-32 rounded-lg bg-card shadow-soft hover:shadow-card transition-shadow overflow-hidden touch-none cursor-grab active:cursor-grabbing"
+      className="group flex items-center gap-3 rounded-lg bg-card shadow-soft hover:shadow-card transition-shadow p-2 pr-3"
     >
-      <div className="relative aspect-square bg-sage-light flex items-center justify-center p-2">
-        <img
-          src={pose.image}
-          alt={pose.englishName}
-          className="w-full h-full object-contain pointer-events-none"
-        />
-        <span className="absolute top-1.5 left-1.5 text-[10px] font-body w-5 h-5 rounded-full bg-background/80 backdrop-blur-sm text-foreground flex items-center justify-center font-semibold">
-          {position}
-        </span>
-        <button
-          onPointerDown={(e) => e.stopPropagation()}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onRemove();
-          }}
-          className="absolute top-1.5 right-1.5 p-1 rounded-full bg-background/80 backdrop-blur-sm hover:bg-destructive hover:text-destructive-foreground transition-colors"
-          aria-label="Remove from sequence"
-        >
-          <X className="w-3 h-3" />
-        </button>
+      <button
+        {...attributes}
+        {...listeners}
+        className="touch-none cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground p-1"
+        aria-label="Drag to reorder"
+      >
+        <GripVertical className="w-4 h-4" />
+      </button>
+      <span className="text-xs font-body w-6 h-6 rounded-full bg-sage-light text-foreground flex items-center justify-center font-semibold shrink-0">
+        {position}
+      </span>
+      <div className="w-12 h-12 rounded-md bg-sage-light flex items-center justify-center shrink-0">
+        <img src={pose.image} alt={pose.englishName} className="w-full h-full object-contain p-1" />
       </div>
-      <div className="p-2">
+      <div className="flex-1 min-w-0">
         {language === "sanskrit" ? (
-          <p className="font-display text-xs leading-tight truncate">{pose.sanskritName}</p>
+          <p className="font-display text-sm leading-tight truncate">{pose.sanskritName}</p>
         ) : language === "english" ? (
-          <p className="font-display text-xs leading-tight truncate">{pose.englishName}</p>
+          <p className="font-display text-sm leading-tight truncate">{pose.englishName}</p>
         ) : (
           <>
-            <p className="font-display text-xs leading-tight truncate">{pose.englishName}</p>
-            <p className="text-[10px] text-muted-foreground font-body truncate">{pose.sanskritName}</p>
+            <p className="font-display text-sm leading-tight truncate">{pose.englishName}</p>
+            <p className="text-[11px] text-muted-foreground font-body truncate">{pose.sanskritName}</p>
           </>
         )}
       </div>
+      <button
+        onClick={onRemove}
+        className="p-1.5 rounded-full text-muted-foreground hover:bg-destructive hover:text-destructive-foreground transition-colors shrink-0"
+        aria-label="Remove from sequence"
+      >
+        <X className="w-4 h-4" />
+      </button>
     </div>
   );
 }
 
-function BrowseCard({
+function BrowseRow({
   pose,
   language,
   onAdd,
@@ -112,28 +109,26 @@ function BrowseCard({
   return (
     <button
       onClick={onAdd}
-      className="group relative shrink-0 w-28 text-left rounded-lg bg-card shadow-soft hover:shadow-card transition-all overflow-hidden active:scale-[0.97]"
+      className="group w-full flex items-center gap-3 text-left rounded-lg bg-card shadow-soft hover:shadow-card transition-all p-2 active:scale-[0.99]"
     >
-      <div className="relative aspect-square bg-sage-light flex items-center justify-center p-2">
-        <img src={pose.image} alt={pose.englishName} className="w-full h-full object-contain" />
-        <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-colors flex items-center justify-center">
-          <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-soft opacity-0 group-hover:opacity-100 transition-opacity">
-            <Plus className="w-4 h-4" />
-          </div>
-        </div>
+      <div className="w-12 h-12 rounded-md bg-sage-light flex items-center justify-center shrink-0">
+        <img src={pose.image} alt={pose.englishName} className="w-full h-full object-contain p-1" />
       </div>
-      <div className="p-1.5">
+      <div className="flex-1 min-w-0">
         {language === "sanskrit" ? (
-          <p className="font-display text-xs leading-tight truncate">{pose.sanskritName}</p>
+          <p className="font-display text-sm leading-tight truncate">{pose.sanskritName}</p>
         ) : language === "english" ? (
-          <p className="font-display text-xs leading-tight truncate">{pose.englishName}</p>
+          <p className="font-display text-sm leading-tight truncate">{pose.englishName}</p>
         ) : (
           <>
-            <p className="font-display text-xs leading-tight truncate">{pose.englishName}</p>
-            <p className="text-[10px] text-muted-foreground font-body truncate">{pose.sanskritName}</p>
+            <p className="font-display text-sm leading-tight truncate">{pose.englishName}</p>
+            <p className="text-[11px] text-muted-foreground font-body truncate">{pose.sanskritName}</p>
           </>
         )}
       </div>
+      <span className="w-7 h-7 rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground flex items-center justify-center transition-colors shrink-0">
+        <Plus className="w-4 h-4" />
+      </span>
     </button>
   );
 }
@@ -189,9 +184,9 @@ export default function Sequence() {
     .filter((x): x is { item: SequenceItem; pose: YogaPose } => !!x.pose);
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-20">
       <header className="sticky top-0 z-30 bg-background/90 backdrop-blur-lg border-b border-border">
-        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
+        <div className="px-4 py-3 flex items-center justify-between gap-2">
           <div>
             <h1 className="font-display text-2xl font-semibold leading-tight">Sequence</h1>
             <p className="text-xs text-muted-foreground font-body">
@@ -213,62 +208,64 @@ export default function Sequence() {
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 py-4 space-y-6">
-        {/* Browse carousel */}
-        <section>
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="font-display text-lg font-semibold">Browse poses</h2>
-            <p className="text-xs text-muted-foreground font-body">Tap to add</p>
-          </div>
-          <div className="relative mb-3">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search poses…"
-              className="pl-9"
-            />
-          </div>
-          {filteredPoses.length === 0 ? (
-            <p className="text-center text-sm text-muted-foreground py-8 font-body">No poses match.</p>
-          ) : (
-            <div className="-mx-4 px-4 overflow-x-auto">
-              <div className="flex gap-2 pb-2">
-                {filteredPoses.map((pose) => (
-                  <BrowseCard
-                    key={pose.id}
-                    pose={pose}
-                    language={language}
-                    onAdd={() => addPose(pose.id)}
-                  />
-                ))}
-              </div>
+      <main className="grid grid-cols-1 md:grid-cols-[320px_1fr] gap-4 px-4 py-4 md:h-[calc(100vh-8.5rem)]">
+        {/* Left side panel: Browse */}
+        <section className="flex flex-col min-h-0 rounded-xl border border-border bg-card/40">
+          <div className="p-3 border-b border-border">
+            <h2 className="font-display text-base font-semibold mb-2">Browse poses</h2>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search poses…"
+                className="pl-9 h-9"
+              />
             </div>
-          )}
+          </div>
+          <div className="flex-1 overflow-y-auto p-2 space-y-1.5 max-h-[60vh] md:max-h-none">
+            {filteredPoses.length === 0 ? (
+              <p className="text-center text-sm text-muted-foreground py-8 font-body">No poses match.</p>
+            ) : (
+              filteredPoses.map((pose) => (
+                <BrowseRow
+                  key={pose.id}
+                  pose={pose}
+                  language={language}
+                  onAdd={() => addPose(pose.id)}
+                />
+              ))
+            )}
+          </div>
         </section>
 
-        {/* Sequence */}
-        <section>
-          <h2 className="font-display text-lg font-semibold mb-2">Your sequence</h2>
-          {sequence.length === 0 ? (
-            <div className="text-center py-12 rounded-lg border border-dashed border-border">
-              <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-sage-light flex items-center justify-center">
-                <Plus className="w-7 h-7 text-primary" />
+        {/* Right side: Current sequence */}
+        <section className="flex flex-col min-h-0 rounded-xl border border-border bg-card/40">
+          <div className="p-3 border-b border-border flex items-center justify-between">
+            <h2 className="font-display text-base font-semibold">Your sequence</h2>
+            <p className="text-xs text-muted-foreground font-body">Drag to reorder</p>
+          </div>
+          <div className="flex-1 overflow-y-auto p-3">
+            {sequence.length === 0 ? (
+              <div className="h-full min-h-[240px] flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-sage-light flex items-center justify-center">
+                    <Plus className="w-7 h-7 text-primary" />
+                  </div>
+                  <p className="text-sm text-muted-foreground font-body max-w-xs mx-auto">
+                    Tap any pose on the left to add it. Drag rows to reorder.
+                  </p>
+                </div>
               </div>
-              <p className="text-sm text-muted-foreground font-body max-w-xs mx-auto">
-                Tap any pose above to add it. Drag cards to reorder.
-              </p>
-            </div>
-          ) : (
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-              <SortableContext
-                items={sequence.map((i) => i.uid)}
-                strategy={horizontalListSortingStrategy}
-              >
-                <div className="-mx-4 px-4 overflow-x-auto">
-                  <div className="flex gap-2 pb-2">
+            ) : (
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <SortableContext
+                  items={sequence.map((i) => i.uid)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="space-y-2">
                     {sequencePoses.map(({ item, pose }, i) => (
-                      <SortableCard
+                      <SortableRow
                         key={item.uid}
                         item={item}
                         pose={pose}
@@ -278,17 +275,17 @@ export default function Sequence() {
                       />
                     ))}
                   </div>
-                </div>
-              </SortableContext>
-            </DndContext>
-          )}
+                </SortableContext>
+              </DndContext>
+            )}
+          </div>
         </section>
       </main>
 
       {/* Floating play button */}
       {sequence.length > 0 && (
         <div className="fixed bottom-20 left-0 right-0 z-40 px-4 pointer-events-none">
-          <div className="max-w-3xl mx-auto flex items-center justify-end">
+          <div className="flex items-center justify-end">
             <button
               onClick={() => setPlayerOpen(true)}
               className="pointer-events-auto inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent text-accent-foreground font-body font-medium shadow-card"
