@@ -21,7 +21,6 @@ export default function VocabBrowse() {
           (r) =>
             r.sanskrit.toLowerCase().includes(q) ||
             r.simple.toLowerCase().includes(q) ||
-            r.devanagari.includes(q) ||
             r.meaning.toLowerCase().includes(q)
         )
       : sanskritRoots;
@@ -55,7 +54,7 @@ export default function VocabBrowse() {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search roots, devanāgarī, or meanings..."
+            placeholder="Search roots or meanings..."
             className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-muted font-body text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
           />
         </div>
@@ -126,9 +125,6 @@ export default function VocabBrowse() {
                       >
                         <div className="flex items-baseline justify-between gap-2">
                           <div className="flex items-baseline gap-2 min-w-0">
-                            <span className="font-display text-xl text-foreground/80" lang="sa">
-                              {r.devanagari}
-                            </span>
                             <p className="font-display text-lg font-semibold italic truncate">{r.sanskrit}</p>
                           </div>
                           <p className="font-body text-sm text-primary flex-shrink-0">{r.meaning}</p>

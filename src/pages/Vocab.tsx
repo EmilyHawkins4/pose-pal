@@ -17,7 +17,7 @@ export default function Vocab() {
 
   return (
     <div className="min-h-screen pb-24">
-      <div className="px-5 pt-12 pb-3">
+      <div className="px-5 pt-5 pb-3">
         <h1 className="font-display text-3xl font-bold mb-1">Vocab</h1>
         <p className="font-body text-sm text-muted-foreground mb-3">
           Sanskrit roots — the building blocks of asana names.

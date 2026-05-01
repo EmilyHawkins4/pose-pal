@@ -286,7 +286,8 @@ export const poseBreakdowns: Record<string, PoseBreakdownToken[]> = {
     { word: "āsana", rootId: "asana", meaning: "pose" },
   ],
   "crescent-lunge": [
-    { word: "Añjaneya", rootId: "anjaneya", meaning: "son of Añjanā (Hanumān)" },
+    { word: "Aṣṭa", meaning: "eight" },
+    { word: "Chandra", rootId: "candra", meaning: "moon / crescent" },
     { word: "āsana", rootId: "asana", meaning: "pose" },
   ],
   "horse": [
@@ -304,7 +305,8 @@ export const poseBreakdowns: Record<string, PoseBreakdownToken[]> = {
   ],
   "crescent-lunge-twist": [
     { word: "Parivṛtta", rootId: "parivrtta", meaning: "revolved" },
-    { word: "Añjaneya", rootId: "anjaneya", meaning: "son of Añjanā" },
+    { word: "Aṣṭa", meaning: "eight" },
+    { word: "Chandra", rootId: "candra", meaning: "moon / crescent" },
     { word: "āsana", rootId: "asana", meaning: "pose" },
   ],
   "mountain-twist": [
@@ -347,8 +349,8 @@ export const poseBreakdowns: Record<string, PoseBreakdownToken[]> = {
     { word: "āsana", rootId: "asana", meaning: "pose" },
   ],
   "crescent-lunge-airplane": [
-    { word: "Parivṛtta", rootId: "parivrtta", meaning: "revolved" },
-    { word: "Añjaneya", rootId: "anjaneya", meaning: "son of Añjanā" },
+    { word: "Aṣṭa", meaning: "eight" },
+    { word: "Chandra", rootId: "candra", meaning: "moon / crescent" },
     { word: "āsana", rootId: "asana", meaning: "pose" },
   ],
   "easy-seat": [

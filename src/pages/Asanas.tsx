@@ -17,7 +17,7 @@ export default function Asanas() {
 
   return (
     <div className="min-h-screen pb-24">
-      <div className="px-5 pt-12 pb-3">
+      <div className="px-5 pt-5 pb-3">
         <h1 className="font-display text-3xl font-bold mb-3">Asanas</h1>
         {isQuiz && <SectionTabs tabs={ASANAS_TABS} />}
       </div>

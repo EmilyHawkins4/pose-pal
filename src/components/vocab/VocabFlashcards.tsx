@@ -72,8 +72,7 @@ export default function VocabFlashcards() {
                 {!flipped ? (
                   mode === "root-to-meaning" ? (
                     <>
-                      <p className="font-display text-5xl mb-3" lang="sa">{current.devanagari}</p>
-                      <p className="font-display text-2xl italic">{current.sanskrit}</p>
+                      <p className="font-display text-4xl italic">{current.sanskrit}</p>
                       <p className="font-body text-xs text-muted-foreground mt-2">{current.pronunciation}</p>
                       <p className="text-xs text-muted-foreground font-body mt-6">Tap to reveal</p>
                     </>
@@ -94,8 +93,7 @@ export default function VocabFlashcards() {
                       </>
                     ) : (
                       <>
-                        <p className="font-display text-5xl mb-3" lang="sa">{current.devanagari}</p>
-                        <p className="font-display text-2xl italic">{current.sanskrit}</p>
+                        <p className="font-display text-4xl italic">{current.sanskrit}</p>
                         <p className="font-body text-xs text-muted-foreground mt-2">{current.pronunciation}</p>
                       </>
                     )}

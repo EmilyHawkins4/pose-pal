@@ -22,7 +22,6 @@ export type QuizMode =
   | "mixed-all"
   | "roots-sanskrit-to-meaning"
   | "roots-meaning-to-sanskrit"
-  | "roots-devanagari-to-meaning"
   | "roots-mixed";
 
 interface QuizQuestion {
@@ -49,7 +48,7 @@ const ALL_MODES: ModeMeta[] = [
   { id: "mixed-all", title: "Mixed (everything)", description: "Every possible combination", emoji: "🎲", group: "asanas" },
   { id: "roots-sanskrit-to-meaning", title: "Root → Meaning", description: "What does this Sanskrit root mean?", emoji: "🌱", group: "roots" },
   { id: "roots-meaning-to-sanskrit", title: "Meaning → Root", description: "What's the Sanskrit for this meaning?", emoji: "🪷", group: "roots" },
-  { id: "roots-mixed", title: "Mixed roots", description: "Both directions, plus Devanāgarī", emoji: "🎲", group: "roots" },
+  { id: "roots-mixed", title: "Mixed roots", description: "Both directions", emoji: "🎲", group: "roots" },
 ];
 
 function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
@@ -61,21 +60,13 @@ function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
       const others = shuffleArray(sanskritRoots.filter((r) => r.id !== root.id)).slice(0, 3);
       let actual = mode;
       if (mode === "roots-mixed") {
-        const opts = ["roots-sanskrit-to-meaning", "roots-meaning-to-sanskrit", "roots-devanagari-to-meaning"] as const;
+        const opts = ["roots-sanskrit-to-meaning", "roots-meaning-to-sanskrit"] as const;
         actual = opts[Math.floor(Math.random() * opts.length)];
       }
       if (actual === "roots-sanskrit-to-meaning") {
         const correctAnswer = root.meaning;
         return {
           promptOverride: `What does "${root.sanskrit}" mean?`,
-          correctAnswer,
-          options: shuffleArray([correctAnswer, ...others.map((r) => r.meaning)]),
-          type: actual,
-        };
-      } else if (actual === "roots-devanagari-to-meaning") {
-        const correctAnswer = root.meaning;
-        return {
-          promptOverride: `What does "${root.devanagari}" (${root.sanskrit}) mean?`,
           correctAnswer,
           options: shuffleArray([correctAnswer, ...others.map((r) => r.meaning)]),
           type: actual,
