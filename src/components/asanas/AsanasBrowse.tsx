@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, X, Bookmark } from "lucide-react";
+import { Search, X, Star } from "lucide-react";
 import { poses, searchPoses, CATEGORIES, type PoseCategory } from "@/data/poses";
 import PoseCard from "@/components/PoseCard";
 import LanguageToggle from "@/components/LanguageToggle";
@@ -83,12 +83,12 @@ export default function AsanasBrowse() {
         </div>
       </div>
 
-      {/* Bookmarked */}
+      {/* Starred */}
       {bookmarkedPoses.length > 0 && !trimmedQuery && selectedCategory === "all" && (
         <div className="px-5 mb-6">
           <div className="flex items-center gap-2 mb-3">
-            <Bookmark className="w-4 h-4 text-accent" />
-            <h2 className="font-display text-xl font-semibold">Bookmarked</h2>
+            <Star className="w-4 h-4 text-accent fill-accent" />
+            <h2 className="font-display text-xl font-semibold">Starred</h2>
           </div>
           <div className="flex gap-3 overflow-x-auto pb-2 -mx-5 px-5 scrollbar-hide">
             {bookmarkedPoses.map((pose) => (

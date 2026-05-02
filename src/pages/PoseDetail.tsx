@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { poses } from "@/data/poses";
 import { poseBreakdowns } from "@/data/sanskritRoots";
-import { ArrowLeft, Bookmark } from "lucide-react";
+import { ArrowLeft, Star } from "lucide-react";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { motion } from "framer-motion";
 import BottomNav from "@/components/BottomNav";
@@ -39,9 +39,9 @@ export default function PoseDetail() {
         <button
           onClick={() => toggle(pose.id)}
           className="w-9 h-9 rounded-full bg-muted hover:bg-muted/70 flex items-center justify-center transition-colors"
-          aria-label={bookmarked ? "Remove bookmark" : "Bookmark pose"}
+          aria-label={bookmarked ? "Unstar pose" : "Star pose"}
         >
-          <Bookmark className={`w-5 h-5 ${bookmarked ? "fill-accent text-accent" : "text-foreground"}`} />
+          <Star className={`w-5 h-5 ${bookmarked ? "fill-accent text-accent" : "text-foreground"}`} />
         </button>
       </div>
 
