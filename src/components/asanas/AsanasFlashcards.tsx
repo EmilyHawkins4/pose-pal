@@ -1,9 +1,10 @@
 import { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { poses, CATEGORIES, type PoseCategory } from "@/data/poses";
-import { ArrowRight, RotateCcw, Shuffle } from "lucide-react";
+import { ArrowRight, RotateCcw, Shuffle, Star } from "lucide-react";
 import SectionTabs from "@/components/SectionTabs";
 import { ASANAS_TABS } from "@/pages/Asanas";
+import { useBookmarks } from "@/hooks/useBookmarks";
 
 function shuffleArray<T>(arr: T[]): T[] {
   const shuffled = [...arr];
@@ -21,11 +22,14 @@ export default function AsanasFlashcards() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [mode, setMode] = useState<"image-to-name" | "name-to-image">("image-to-name");
+  const [starredOnly, setStarredOnly] = useState(false);
+  const { isBookmarked, toggle: toggleStar, bookmarks } = useBookmarks();
 
-  const filtered = useMemo(
-    () => (category === "all" ? deck : deck.filter((p) => p.category === category)),
-    [category, deck]
-  );
+  const filtered = useMemo(() => {
+    let list = category === "all" ? deck : deck.filter((p) => p.category === category);
+    if (starredOnly) list = list.filter((p) => bookmarks.includes(p.id));
+    return list;
+  }, [category, deck, starredOnly, bookmarks]);
 
   const current = filtered[currentIndex];
 
