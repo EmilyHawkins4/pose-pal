@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Layers, FlipHorizontal, Brain, Bookmark, BookOpen, ListOrdered } from "lucide-react";
+import { Layers, FlipHorizontal, Brain, Star, BookOpen, ListOrdered } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { poses } from "@/data/poses";
@@ -67,12 +67,12 @@ export default function Index() {
         </div>
       </div>
 
-      {/* Bookmarked */}
+      {/* Starred */}
       {bookmarkedPoses.length > 0 && (
         <div className="px-5 mt-8">
           <div className="flex items-center gap-2 mb-3">
-            <Bookmark className="w-4 h-4 text-accent" />
-            <h2 className="font-display text-xl font-semibold">Bookmarked</h2>
+            <Star className="w-4 h-4 text-accent fill-accent" />
+            <h2 className="font-display text-xl font-semibold">Starred</h2>
           </div>
           <div className="flex gap-3 overflow-x-auto pb-2 -mx-5 px-5 scrollbar-hide">
             {bookmarkedPoses.map((pose) => (
