@@ -266,12 +266,15 @@ export default function QuizContent({ scope }: Props) {
   }
 
   const showImage = question.type === "image-to-english" || question.type === "image-to-sanskrit";
+  const imageOptions = !!question.imageOptions;
 
   const getPromptText = () => {
     if (question.promptOverride) return question.promptOverride;
     if (question.type === "english-to-sanskrit") return `What is "${pose?.englishName}" in Sanskrit?`;
     if (question.type === "sanskrit-to-english") return `What is "${pose?.sanskritName}" in English?`;
     if (question.type === "image-to-sanskrit") return "What is the Sanskrit name?";
+    if (question.type === "english-to-image") return `Which pose is "${pose?.englishName}"?`;
+    if (question.type === "sanskrit-to-image") return `Which pose is "${pose?.sanskritName}"?`;
     return "What is the English name?";
   };
 
