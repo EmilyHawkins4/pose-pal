@@ -1,18 +1,20 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, Search, Star } from "lucide-react";
 import {
   sanskritRoots,
   ROOT_CATEGORY_LABELS,
   getPosesUsingRoot,
   type SanskritRoot,
 } from "@/data/sanskritRoots";
+import { useStarredRoots } from "@/hooks/useStarredRoots";
 
 /** Browse + search Sanskrit roots (no page chrome). */
 export default function VocabBrowse() {
   const [query, setQuery] = useState("");
   const [primerOpen, setPrimerOpen] = useState(false);
+  const { isStarred, toggle: toggleStar } = useStarredRoots();
 
   const grouped = useMemo(() => {
     const q = query.trim().toLowerCase();
