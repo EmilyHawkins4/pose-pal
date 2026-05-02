@@ -110,66 +110,93 @@ export default function AsanasFlashcards() {
         ))}
       </div>
 
-      <p className="px-5 text-xs text-muted-foreground font-body mt-2">
-        {currentIndex + 1} / {filtered.length} · Tap card to flip ·{" "}
-        {mode === "image-to-name" ? "Image → Name" : "Name → Image"}
-      </p>
+      {!current ? (
+        <div className="text-center py-16 px-5">
+          <p className="text-3xl mb-2">⭐</p>
+          <p className="font-body text-sm text-muted-foreground">
+            {starredOnly
+              ? "No starred poses yet. Star some from Browse first."
+              : "No cards available."}
+          </p>
+        </div>
+      ) : (
+        <>
+          <p className="px-5 text-xs text-muted-foreground font-body mt-2">
+            {currentIndex + 1} / {filtered.length} · Tap card to flip ·{" "}
+            {mode === "image-to-name" ? "Image → Name" : "Name → Image"}
+          </p>
 
-      <div className="px-5 flex justify-center mt-4">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current.id + currentIndex}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="w-full max-w-sm"
-          >
-            <button
-              onClick={() => setFlipped(!flipped)}
-              className="w-full aspect-[3/4] rounded-2xl bg-card shadow-elevated overflow-hidden cursor-pointer focus:outline-none"
-            >
-              <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center">
-                {!flipped ? (
-                  <>
-                    {mode === "image-to-name" ? (
-                      <img src={current.image} alt="Yoga pose" className="w-48 h-48 object-contain mb-4" />
+          <div className="px-5 flex justify-center mt-4">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={current.id + currentIndex}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="w-full max-w-sm relative"
+              >
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleStar(current.id);
+                  }}
+                  className="absolute top-3 right-3 z-10 p-2 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background transition-colors"
+                  aria-label={isBookmarked(current.id) ? "Unstar pose" : "Star pose"}
+                >
+                  <Star
+                    className={`w-4 h-4 transition-colors ${
+                      isBookmarked(current.id) ? "fill-accent text-accent" : "text-muted-foreground"
+                    }`}
+                  />
+                </button>
+                <button
+                  onClick={() => setFlipped(!flipped)}
+                  className="w-full aspect-[3/4] rounded-2xl bg-card shadow-elevated overflow-hidden cursor-pointer focus:outline-none"
+                >
+                  <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center">
+                    {!flipped ? (
+                      <>
+                        {mode === "image-to-name" ? (
+                          <img src={current.image} alt="Yoga pose" className="w-48 h-48 object-contain mb-4" />
+                        ) : (
+                          <>
+                            <p className="font-display text-2xl font-bold">{current.englishName}</p>
+                            <p className="font-display text-lg text-muted-foreground italic mt-1">
+                              {current.sanskritName}
+                            </p>
+                          </>
+                        )}
+                        <p className="text-xs text-muted-foreground font-body mt-6">Tap to reveal</p>
+                      </>
                     ) : (
-                      <>
-                        <p className="font-display text-2xl font-bold">{current.englishName}</p>
-                        <p className="font-display text-lg text-muted-foreground italic mt-1">
-                          {current.sanskritName}
-                        </p>
-                      </>
+                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05 }}>
+                        {mode === "image-to-name" ? (
+                          <>
+                            <p className="font-display text-2xl font-bold">{current.englishName}</p>
+                            <p className="font-display text-lg text-muted-foreground italic mt-1">
+                              {current.sanskritName}
+                            </p>
+                            <p className="text-xs text-muted-foreground font-body mt-4 capitalize">
+                              {current.category} · {current.difficulty}
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <img src={current.image} alt={current.englishName} className="w-48 h-48 object-contain mb-4" />
+                            <p className="text-xs text-muted-foreground font-body mt-4 capitalize">
+                              {current.category} · {current.difficulty}
+                            </p>
+                          </>
+                        )}
+                      </motion.div>
                     )}
-                    <p className="text-xs text-muted-foreground font-body mt-6">Tap to reveal</p>
-                  </>
-                ) : (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05 }}>
-                    {mode === "image-to-name" ? (
-                      <>
-                        <p className="font-display text-2xl font-bold">{current.englishName}</p>
-                        <p className="font-display text-lg text-muted-foreground italic mt-1">
-                          {current.sanskritName}
-                        </p>
-                        <p className="text-xs text-muted-foreground font-body mt-4 capitalize">
-                          {current.category} · {current.difficulty}
-                        </p>
-                      </>
-                    ) : (
-                      <>
-                        <img src={current.image} alt={current.englishName} className="w-48 h-48 object-contain mb-4" />
-                        <p className="text-xs text-muted-foreground font-body mt-4 capitalize">
-                          {current.category} · {current.difficulty}
-                        </p>
-                      </>
-                    )}
-                  </motion.div>
-                )}
-              </div>
-            </button>
-          </motion.div>
-        </AnimatePresence>
-      </div>
+                  </div>
+                </button>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </>
+      )}
 
       <div className="flex items-center justify-center gap-4 mt-6 px-5">
         <button
