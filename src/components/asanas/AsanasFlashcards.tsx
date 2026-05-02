@@ -51,14 +51,33 @@ export default function AsanasFlashcards() {
     <div>
       <div className="px-5 pb-2 flex items-center justify-between gap-2">
         <SectionTabs tabs={ASANAS_TABS} />
-        <button
-          onClick={() => setMode((m) => (m === "image-to-name" ? "name-to-image" : "image-to-name"))}
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-muted text-muted-foreground hover:text-foreground text-sm font-body font-medium transition-colors whitespace-nowrap"
-          aria-label="Switch mode"
-        >
-          <Shuffle className="w-4 h-4" />
-          {mode === "image-to-name" ? "Img→Name" : "Name→Img"}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => {
+              setStarredOnly((s) => !s);
+              setCurrentIndex(0);
+              setFlipped(false);
+            }}
+            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-body font-medium transition-colors whitespace-nowrap ${
+              starredOnly
+                ? "bg-accent text-accent-foreground"
+                : "bg-muted text-muted-foreground hover:text-foreground"
+            }`}
+            aria-pressed={starredOnly}
+            aria-label="Toggle starred only"
+          >
+            <Star className={`w-4 h-4 ${starredOnly ? "fill-current" : ""}`} />
+            Starred
+          </button>
+          <button
+            onClick={() => setMode((m) => (m === "image-to-name" ? "name-to-image" : "image-to-name"))}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-muted text-muted-foreground hover:text-foreground text-sm font-body font-medium transition-colors whitespace-nowrap"
+            aria-label="Switch mode"
+          >
+            <Shuffle className="w-4 h-4" />
+            {mode === "image-to-name" ? "Img→Name" : "Name→Img"}
+          </button>
+        </div>
       </div>
 
       <div className="flex gap-2 overflow-x-auto pb-2 px-5 scrollbar-hide">
