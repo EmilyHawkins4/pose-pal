@@ -1,18 +1,20 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, Search, Star } from "lucide-react";
 import {
   sanskritRoots,
   ROOT_CATEGORY_LABELS,
   getPosesUsingRoot,
   type SanskritRoot,
 } from "@/data/sanskritRoots";
+import { useStarredRoots } from "@/hooks/useStarredRoots";
 
 /** Browse + search Sanskrit roots (no page chrome). */
 export default function VocabBrowse() {
   const [query, setQuery] = useState("");
   const [primerOpen, setPrimerOpen] = useState(false);
+  const { isStarred, toggle: toggleStar } = useStarredRoots();
 
   const grouped = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -112,16 +114,18 @@ export default function VocabBrowse() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {items.map((r, i) => {
                   const poseCount = getPosesUsingRoot(r.id).length;
+                  const starred = isStarred(r.id);
                   return (
                     <motion.div
                       key={r.id}
                       initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.02 }}
+                      className="relative"
                     >
                       <Link
                         to={`/roots/${r.id}`}
-                        className="block p-3 rounded-xl bg-card shadow-soft hover:shadow-card transition-shadow"
+                        className="block p-3 pr-10 rounded-xl bg-card shadow-soft hover:shadow-card transition-shadow"
                       >
                         <div className="flex items-baseline justify-between gap-2">
                           <div className="flex items-baseline gap-2 min-w-0">
@@ -138,6 +142,21 @@ export default function VocabBrowse() {
                           )}
                         </div>
                       </Link>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleStar(r.id);
+                        }}
+                        className="absolute top-2 right-2 p-1.5 rounded-full hover:bg-muted transition-colors"
+                        aria-label={starred ? "Unstar root" : "Star root"}
+                      >
+                        <Star
+                          className={`w-4 h-4 transition-colors ${
+                            starred ? "fill-accent text-accent" : "text-muted-foreground"
+                          }`}
+                        />
+                      </button>
                     </motion.div>
                   );
                 })}

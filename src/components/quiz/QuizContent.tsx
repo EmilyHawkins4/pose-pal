@@ -2,7 +2,9 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { poses } from "@/data/poses";
 import { sanskritRoots } from "@/data/sanskritRoots";
-import { CheckCircle2, XCircle, RotateCcw, Trophy, ArrowLeft } from "lucide-react";
+import { CheckCircle2, XCircle, RotateCcw, Trophy, ArrowLeft, Star } from "lucide-react";
+import { useBookmarks } from "@/hooks/useBookmarks";
+import { useStarredRoots } from "@/hooks/useStarredRoots";
 
 function shuffleArray<T>(arr: T[]): T[] {
   const shuffled = [...arr];
@@ -59,10 +61,14 @@ const ALL_MODES: ModeMeta[] = [
   { id: "roots-mixed", title: "Mixed roots", description: "Both directions", emoji: "🎲", group: "roots" },
 ];
 
-function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
+function generateQuiz(mode: QuizMode, count: number = 10, starredIds?: string[]): QuizQuestion[] {
   // Roots quizzes
   if (mode.startsWith("roots-")) {
-    const shuffled = shuffleArray(sanskritRoots);
+    const pool = starredIds && starredIds.length > 0
+      ? sanskritRoots.filter((r) => starredIds.includes(r.id))
+      : sanskritRoots;
+    if (pool.length === 0) return [];
+    const shuffled = shuffleArray(pool);
     const selected = shuffled.slice(0, Math.min(count, shuffled.length));
     return selected.map((root) => {
       const others = shuffleArray(sanskritRoots.filter((r) => r.id !== root.id)).slice(0, 3);
@@ -91,7 +97,11 @@ function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
     });
   }
 
-  const shuffled = shuffleArray(poses);
+  const pool = starredIds && starredIds.length > 0
+    ? poses.filter((p) => starredIds.includes(p.id))
+    : poses;
+  if (pool.length === 0) return [];
+  const shuffled = shuffleArray(pool);
   const selected = shuffled.slice(0, Math.min(count, shuffled.length));
 
   return selected.map((pose) => {
@@ -170,10 +180,18 @@ export default function QuizContent({ scope }: Props) {
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
   const [answered, setAnswered] = useState(false);
+  const [starredOnly, setStarredOnly] = useState(false);
+
+  const { bookmarks } = useBookmarks();
+  const { starred: starredRoots } = useStarredRoots();
+  const starredCount = scope === "asanas" ? bookmarks.length : starredRoots.length;
 
   const startQuiz = (m: QuizMode) => {
+    const ids = scope === "asanas" ? bookmarks : starredRoots;
+    const qs = generateQuiz(m, 10, starredOnly ? ids : undefined);
+    if (qs.length === 0) return;
     setMode(m);
-    setQuestions(generateQuiz(m));
+    setQuestions(qs);
     setCurrentQ(0);
     setSelected(null);
     setScore(0);
@@ -189,16 +207,44 @@ export default function QuizContent({ scope }: Props) {
 
   if (!mode) {
     const modes = ALL_MODES.filter((m) => m.group === scope);
+    const insufficientStarred = starredOnly && starredCount === 0;
     return (
       <div className="px-5">
-        <p className="font-body text-sm text-muted-foreground mb-3">Choose how you'd like to practice</p>
+        <div className="flex items-center justify-between mb-3 gap-2">
+          <p className="font-body text-sm text-muted-foreground">Choose how you'd like to practice</p>
+          <button
+            onClick={() => setStarredOnly((s) => !s)}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-body font-medium transition-colors whitespace-nowrap ${
+              starredOnly
+                ? "bg-accent text-accent-foreground"
+                : "bg-muted text-muted-foreground hover:text-foreground"
+            }`}
+            aria-pressed={starredOnly}
+            aria-label="Toggle starred only"
+          >
+            <Star className={`w-3.5 h-3.5 ${starredOnly ? "fill-current" : ""}`} />
+            Starred only
+          </button>
+        </div>
+        {starredOnly && (
+          <p className="font-body text-xs text-muted-foreground mb-3">
+            {starredCount === 0
+              ? `No starred ${scope === "asanas" ? "poses" : "roots"} yet. Star some from Browse first.`
+              : `Quizzing on ${starredCount} starred ${scope === "asanas" ? "pose" : "root"}${
+                  starredCount === 1 ? "" : "s"
+                }.`}
+          </p>
+        )}
         <div className="space-y-3">
           {modes.map((m) => (
             <motion.button
               key={m.id}
               whileTap={{ scale: 0.98 }}
               onClick={() => startQuiz(m.id)}
-              className="w-full flex items-center gap-4 p-4 rounded-2xl bg-card shadow-soft hover:shadow-card transition-all text-left"
+              disabled={insufficientStarred}
+              className={`w-full flex items-center gap-4 p-4 rounded-2xl bg-card shadow-soft hover:shadow-card transition-all text-left ${
+                insufficientStarred ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
               <div className="w-12 h-12 rounded-xl bg-sage-light flex items-center justify-center text-2xl flex-shrink-0">
                 {m.emoji}
