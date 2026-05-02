@@ -313,7 +313,7 @@ export default function QuizContent({ scope }: Props) {
             )}
             <p className="font-display text-xl font-semibold text-center mb-6">{getPromptText()}</p>
 
-            <div className="space-y-3 max-w-sm mx-auto">
+            <div className={imageOptions ? "grid grid-cols-2 gap-3 max-w-md mx-auto" : "space-y-3 max-w-sm mx-auto"}>
               {question.options.map((option) => {
                 const isCorrect = option === question.correctAnswer;
                 const isSelected = option === selected;
@@ -324,6 +324,31 @@ export default function QuizContent({ scope }: Props) {
                   else if (isSelected && !isCorrect)
                     optionStyle = "bg-destructive/10 text-destructive ring-2 ring-destructive";
                   else optionStyle = "bg-muted text-muted-foreground opacity-60";
+                }
+
+                if (imageOptions) {
+                  const optPose = poses.find((p) => p.id === option);
+                  return (
+                    <button
+                      key={option}
+                      onClick={() => handleSelect(option)}
+                      disabled={answered}
+                      className={`relative aspect-square rounded-xl p-3 flex items-center justify-center transition-all ${optionStyle}`}
+                      aria-label={optPose?.englishName}
+                    >
+                      <img
+                        src={optPose?.image}
+                        alt={optPose?.englishName ?? "Pose option"}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                      {answered && isCorrect && (
+                        <CheckCircle2 className="absolute top-2 right-2 w-5 h-5 text-primary" />
+                      )}
+                      {answered && isSelected && !isCorrect && (
+                        <XCircle className="absolute top-2 right-2 w-5 h-5 text-destructive" />
+                      )}
+                    </button>
+                  );
                 }
 
                 return (
