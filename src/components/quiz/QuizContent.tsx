@@ -18,18 +18,26 @@ export type QuizMode =
   | "image-to-sanskrit"
   | "english-to-sanskrit"
   | "sanskrit-to-english"
+  | "english-to-image"
+  | "sanskrit-to-image"
   | "mixed-no-images"
   | "mixed-all"
   | "roots-sanskrit-to-meaning"
   | "roots-meaning-to-sanskrit"
   | "roots-mixed";
 
+interface ImageOption {
+  image: string;
+  poseId: string;
+}
+
 interface QuizQuestion {
   poseId?: string;
   image?: string;
   promptOverride?: string;
-  correctAnswer: string;
-  options: string[];
+  correctAnswer: string; // for text options: the text; for image options: the poseId
+  options: string[]; // text labels OR poseIds when imageOptions=true
+  imageOptions?: boolean;
   type: QuizMode;
 }
 
@@ -89,30 +97,52 @@ function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
   return selected.map((pose) => {
     let type: QuizMode;
     if (mode === "mixed-all") {
-      const all = ["image-to-english", "image-to-sanskrit", "english-to-sanskrit", "sanskrit-to-english"] as const;
+      const all = [
+        "image-to-english",
+        "image-to-sanskrit",
+        "english-to-sanskrit",
+        "sanskrit-to-english",
+        "english-to-image",
+        "sanskrit-to-image",
+      ] as const;
       type = all[Math.floor(Math.random() * all.length)];
     } else if (mode === "mixed-no-images") {
       const textOnly = ["english-to-sanskrit", "sanskrit-to-english"] as const;
       type = textOnly[Math.floor(Math.random() * textOnly.length)];
     } else if (mode === "english-to-sanskrit") {
-      // bidirectional: randomly flip direction
+      // bidirectional text-only: English ↔ Sanskrit
       type = Math.random() < 0.5 ? "english-to-sanskrit" : "sanskrit-to-english";
     } else if (mode === "image-to-english") {
-      type = Math.random() < 0.5 ? "image-to-english" : "sanskrit-to-english";
+      // bidirectional image ↔ English only (no Sanskrit)
+      type = Math.random() < 0.5 ? "image-to-english" : "english-to-image";
     } else if (mode === "image-to-sanskrit") {
-      type = Math.random() < 0.5 ? "image-to-sanskrit" : "english-to-sanskrit";
+      // bidirectional image ↔ Sanskrit only (no English)
+      type = Math.random() < 0.5 ? "image-to-sanskrit" : "sanskrit-to-image";
     } else {
       type = mode;
     }
 
+    const others = shuffleArray(poses.filter((p) => p.id !== pose.id)).slice(0, 3);
+
+    // Image-answer questions
+    if (type === "english-to-image" || type === "sanskrit-to-image") {
+      return {
+        poseId: pose.id,
+        correctAnswer: pose.id,
+        options: shuffleArray([pose.id, ...others.map((p) => p.id)]),
+        imageOptions: true,
+        type,
+      };
+    }
+
     let correctAnswer: string;
     let distractors: string[];
-    const others = shuffleArray(poses.filter((p) => p.id !== pose.id)).slice(0, 3);
 
     if (type === "image-to-english" || type === "sanskrit-to-english") {
       correctAnswer = pose.englishName;
       distractors = others.map((p) => p.englishName);
     } else {
+      // image-to-sanskrit or english-to-sanskrit
       correctAnswer = pose.sanskritName;
       distractors = others.map((p) => p.sanskritName);
     }
@@ -236,12 +266,15 @@ export default function QuizContent({ scope }: Props) {
   }
 
   const showImage = question.type === "image-to-english" || question.type === "image-to-sanskrit";
+  const imageOptions = !!question.imageOptions;
 
   const getPromptText = () => {
     if (question.promptOverride) return question.promptOverride;
     if (question.type === "english-to-sanskrit") return `What is "${pose?.englishName}" in Sanskrit?`;
     if (question.type === "sanskrit-to-english") return `What is "${pose?.sanskritName}" in English?`;
     if (question.type === "image-to-sanskrit") return "What is the Sanskrit name?";
+    if (question.type === "english-to-image") return `Which pose is "${pose?.englishName}"?`;
+    if (question.type === "sanskrit-to-image") return `Which pose is "${pose?.sanskritName}"?`;
     return "What is the English name?";
   };
 
@@ -280,7 +313,7 @@ export default function QuizContent({ scope }: Props) {
             )}
             <p className="font-display text-xl font-semibold text-center mb-6">{getPromptText()}</p>
 
-            <div className="space-y-3 max-w-sm mx-auto">
+            <div className={imageOptions ? "grid grid-cols-2 gap-3 max-w-md mx-auto" : "space-y-3 max-w-sm mx-auto"}>
               {question.options.map((option) => {
                 const isCorrect = option === question.correctAnswer;
                 const isSelected = option === selected;
@@ -291,6 +324,31 @@ export default function QuizContent({ scope }: Props) {
                   else if (isSelected && !isCorrect)
                     optionStyle = "bg-destructive/10 text-destructive ring-2 ring-destructive";
                   else optionStyle = "bg-muted text-muted-foreground opacity-60";
+                }
+
+                if (imageOptions) {
+                  const optPose = poses.find((p) => p.id === option);
+                  return (
+                    <button
+                      key={option}
+                      onClick={() => handleSelect(option)}
+                      disabled={answered}
+                      className={`relative aspect-square rounded-xl p-3 flex items-center justify-center transition-all ${optionStyle}`}
+                      aria-label={optPose?.englishName}
+                    >
+                      <img
+                        src={optPose?.image}
+                        alt={optPose?.englishName ?? "Pose option"}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                      {answered && isCorrect && (
+                        <CheckCircle2 className="absolute top-2 right-2 w-5 h-5 text-primary" />
+                      )}
+                      {answered && isSelected && !isCorrect && (
+                        <XCircle className="absolute top-2 right-2 w-5 h-5 text-destructive" />
+                      )}
+                    </button>
+                  );
                 }
 
                 return (
