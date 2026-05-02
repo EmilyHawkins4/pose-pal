@@ -18,18 +18,26 @@ export type QuizMode =
   | "image-to-sanskrit"
   | "english-to-sanskrit"
   | "sanskrit-to-english"
+  | "english-to-image"
+  | "sanskrit-to-image"
   | "mixed-no-images"
   | "mixed-all"
   | "roots-sanskrit-to-meaning"
   | "roots-meaning-to-sanskrit"
   | "roots-mixed";
 
+interface ImageOption {
+  image: string;
+  poseId: string;
+}
+
 interface QuizQuestion {
   poseId?: string;
   image?: string;
   promptOverride?: string;
-  correctAnswer: string;
-  options: string[];
+  correctAnswer: string; // for text options: the text; for image options: the poseId
+  options: string[]; // text labels OR poseIds when imageOptions=true
+  imageOptions?: boolean;
   type: QuizMode;
 }
 
