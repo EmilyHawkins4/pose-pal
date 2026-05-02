@@ -61,10 +61,14 @@ const ALL_MODES: ModeMeta[] = [
   { id: "roots-mixed", title: "Mixed roots", description: "Both directions", emoji: "🎲", group: "roots" },
 ];
 
-function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
+function generateQuiz(mode: QuizMode, count: number = 10, starredIds?: string[]): QuizQuestion[] {
   // Roots quizzes
   if (mode.startsWith("roots-")) {
-    const shuffled = shuffleArray(sanskritRoots);
+    const pool = starredIds && starredIds.length > 0
+      ? sanskritRoots.filter((r) => starredIds.includes(r.id))
+      : sanskritRoots;
+    if (pool.length === 0) return [];
+    const shuffled = shuffleArray(pool);
     const selected = shuffled.slice(0, Math.min(count, shuffled.length));
     return selected.map((root) => {
       const others = shuffleArray(sanskritRoots.filter((r) => r.id !== root.id)).slice(0, 3);
@@ -93,7 +97,11 @@ function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
     });
   }
 
-  const shuffled = shuffleArray(poses);
+  const pool = starredIds && starredIds.length > 0
+    ? poses.filter((p) => starredIds.includes(p.id))
+    : poses;
+  if (pool.length === 0) return [];
+  const shuffled = shuffleArray(pool);
   const selected = shuffled.slice(0, Math.min(count, shuffled.length));
 
   return selected.map((pose) => {
