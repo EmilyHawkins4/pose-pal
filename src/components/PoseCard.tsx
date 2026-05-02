@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Bookmark } from "lucide-react";
+import { Star } from "lucide-react";
 import type { YogaPose } from "@/data/poses";
 import { useBookmarks } from "@/hooks/useBookmarks";
 
