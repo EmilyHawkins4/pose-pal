@@ -97,30 +97,52 @@ function generateQuiz(mode: QuizMode, count: number = 10): QuizQuestion[] {
   return selected.map((pose) => {
     let type: QuizMode;
     if (mode === "mixed-all") {
-      const all = ["image-to-english", "image-to-sanskrit", "english-to-sanskrit", "sanskrit-to-english"] as const;
+      const all = [
+        "image-to-english",
+        "image-to-sanskrit",
+        "english-to-sanskrit",
+        "sanskrit-to-english",
+        "english-to-image",
+        "sanskrit-to-image",
+      ] as const;
       type = all[Math.floor(Math.random() * all.length)];
     } else if (mode === "mixed-no-images") {
       const textOnly = ["english-to-sanskrit", "sanskrit-to-english"] as const;
       type = textOnly[Math.floor(Math.random() * textOnly.length)];
     } else if (mode === "english-to-sanskrit") {
-      // bidirectional: randomly flip direction
+      // bidirectional text-only: English ↔ Sanskrit
       type = Math.random() < 0.5 ? "english-to-sanskrit" : "sanskrit-to-english";
     } else if (mode === "image-to-english") {
-      type = Math.random() < 0.5 ? "image-to-english" : "sanskrit-to-english";
+      // bidirectional image ↔ English only (no Sanskrit)
+      type = Math.random() < 0.5 ? "image-to-english" : "english-to-image";
     } else if (mode === "image-to-sanskrit") {
-      type = Math.random() < 0.5 ? "image-to-sanskrit" : "english-to-sanskrit";
+      // bidirectional image ↔ Sanskrit only (no English)
+      type = Math.random() < 0.5 ? "image-to-sanskrit" : "sanskrit-to-image";
     } else {
       type = mode;
     }
 
+    const others = shuffleArray(poses.filter((p) => p.id !== pose.id)).slice(0, 3);
+
+    // Image-answer questions
+    if (type === "english-to-image" || type === "sanskrit-to-image") {
+      return {
+        poseId: pose.id,
+        correctAnswer: pose.id,
+        options: shuffleArray([pose.id, ...others.map((p) => p.id)]),
+        imageOptions: true,
+        type,
+      };
+    }
+
     let correctAnswer: string;
     let distractors: string[];
-    const others = shuffleArray(poses.filter((p) => p.id !== pose.id)).slice(0, 3);
 
     if (type === "image-to-english" || type === "sanskrit-to-english") {
       correctAnswer = pose.englishName;
       distractors = others.map((p) => p.englishName);
     } else {
+      // image-to-sanskrit or english-to-sanskrit
       correctAnswer = pose.sanskritName;
       distractors = others.map((p) => p.sanskritName);
     }
