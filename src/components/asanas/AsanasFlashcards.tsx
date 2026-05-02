@@ -42,13 +42,10 @@ export default function AsanasFlashcards() {
   const next = () => {
     setFlipped(false);
     setTimeout(() => {
+      if (filtered.length === 0) return;
       setCurrentIndex((i) => (i + 1) % filtered.length);
     }, 150);
   };
-
-  if (!current) {
-    return <p className="text-center text-muted-foreground font-body py-12">No cards available.</p>;
-  }
 
   return (
     <div>
