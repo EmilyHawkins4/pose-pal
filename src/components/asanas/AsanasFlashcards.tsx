@@ -198,20 +198,22 @@ export default function AsanasFlashcards() {
         </>
       )}
 
-      <div className="flex items-center justify-center gap-4 mt-6 px-5">
-        <button
-          onClick={reshuffle}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-muted text-muted-foreground font-body text-sm font-medium hover:text-foreground transition-colors"
-        >
-          <RotateCcw className="w-4 h-4" /> Reshuffle
-        </button>
-        <button
-          onClick={next}
-          className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-body text-sm font-medium hover:opacity-90 transition-opacity"
-        >
-          Next <ArrowRight className="w-4 h-4" />
-        </button>
-      </div>
+      {current && (
+        <div className="flex items-center justify-center gap-4 mt-6 px-5">
+          <button
+            onClick={reshuffle}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-muted text-muted-foreground font-body text-sm font-medium hover:text-foreground transition-colors"
+          >
+            <RotateCcw className="w-4 h-4" /> Reshuffle
+          </button>
+          <button
+            onClick={next}
+            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-body text-sm font-medium hover:opacity-90 transition-opacity"
+          >
+            Next <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
