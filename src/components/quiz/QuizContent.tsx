@@ -2,7 +2,9 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { poses } from "@/data/poses";
 import { sanskritRoots } from "@/data/sanskritRoots";
-import { CheckCircle2, XCircle, RotateCcw, Trophy, ArrowLeft } from "lucide-react";
+import { CheckCircle2, XCircle, RotateCcw, Trophy, ArrowLeft, Star } from "lucide-react";
+import { useBookmarks } from "@/hooks/useBookmarks";
+import { useStarredRoots } from "@/hooks/useStarredRoots";
 
 function shuffleArray<T>(arr: T[]): T[] {
   const shuffled = [...arr];
