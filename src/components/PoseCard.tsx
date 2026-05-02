@@ -43,9 +43,9 @@ export default function PoseCard({ pose, index, displayLanguage }: PoseCardProps
               toggle(pose.id);
             }}
             className="absolute top-2 right-2 p-1.5 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background transition-colors"
-            aria-label={bookmarked ? "Remove bookmark" : "Add bookmark"}
+            aria-label={bookmarked ? "Unstar pose" : "Star pose"}
           >
-            <Bookmark
+            <Star
               className={`w-4 h-4 transition-colors ${bookmarked ? "fill-accent text-accent" : "text-muted-foreground"}`}
             />
           </button>
