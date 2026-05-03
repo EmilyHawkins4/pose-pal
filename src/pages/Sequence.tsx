@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { AnimatePresence } from "framer-motion";
-import { Plus, Play, Trash2, X, Search, GripVertical } from "lucide-react";
+import { Plus, Play, Trash2, X, Search, GripVertical, Sparkles } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -29,6 +29,58 @@ import { Input } from "@/components/ui/input";
 interface SequenceItem {
   uid: string;
   poseId: string;
+}
+
+const PRESET_SEQUENCES: { id: string; name: string; description: string; poseIds: string[] }[] = [
+  {
+    id: "sun-a",
+    name: "Sun Salutation A",
+    description: "Sūrya Namaskāra A",
+    poseIds: [
+      "mountain",
+      "forward-fold",
+      "halfway-lift",
+      "plank",
+      "low-plank",
+      "upward-dog",
+      "downward-dog",
+      "halfway-lift",
+      "forward-fold",
+      "mountain",
+    ],
+  },
+  {
+    id: "sun-b",
+    name: "Sun Salutation B",
+    description: "Sūrya Namaskāra B",
+    poseIds: [
+      "mountain",
+      "chair",
+      "forward-fold",
+      "halfway-lift",
+      "plank",
+      "low-plank",
+      "upward-dog",
+      "downward-dog",
+      "warrior-1",
+      "plank",
+      "low-plank",
+      "upward-dog",
+      "downward-dog",
+      "warrior-1",
+      "plank",
+      "low-plank",
+      "upward-dog",
+      "downward-dog",
+      "forward-fold",
+      "halfway-lift",
+      "mountain",
+    ],
+  },
+];
+
+function makeUid(poseId: string, i: number) {
+  return `${poseId}-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
 function SortableRow({
