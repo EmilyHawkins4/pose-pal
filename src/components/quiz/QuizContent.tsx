@@ -1,10 +1,76 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { poses } from "@/data/poses";
 import { sanskritRoots } from "@/data/sanskritRoots";
-import { CheckCircle2, XCircle, RotateCcw, Trophy, ArrowLeft, Star } from "lucide-react";
+import { CheckCircle2, XCircle, RotateCcw, Trophy, ArrowLeft, Star, Search } from "lucide-react";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useStarredRoots } from "@/hooks/useStarredRoots";
+
+function normalize(s: string): string {
+  return s.normalize("NFD").replace(/\p{Mn}/gu, "").toLowerCase().trim();
+}
+
+interface SearchAnswerProps {
+  candidates: string[];
+  onSelect: (value: string) => void;
+  disabled: boolean;
+  selected: string | null;
+  correctAnswer: string;
+  placeholder?: string;
+}
+
+function SearchAnswer({ candidates, onSelect, disabled, selected, correctAnswer, placeholder }: SearchAnswerProps) {
+  const [query, setQuery] = useState("");
+  const filtered = useMemo(() => {
+    const q = normalize(query);
+    if (!q) return [];
+    return candidates.filter((c) => normalize(c).includes(q)).slice(0, 6);
+  }, [query, candidates]);
+
+  return (
+    <div className="max-w-sm mx-auto">
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+        <input
+          type="text"
+          value={disabled ? selected ?? query : query}
+          onChange={(e) => setQuery(e.target.value)}
+          disabled={disabled}
+          placeholder={placeholder ?? "Type to search…"}
+          className="w-full pl-9 pr-3 py-3 rounded-xl bg-card shadow-soft font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-70"
+          autoFocus
+        />
+      </div>
+      {!disabled && filtered.length > 0 && (
+        <div className="mt-2 space-y-1.5">
+          {filtered.map((option) => (
+            <button
+              key={option}
+              onClick={() => onSelect(option)}
+              className="w-full px-4 py-2.5 rounded-lg bg-card shadow-soft hover:shadow-card text-left font-body text-sm text-foreground transition-all"
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      )}
+      {disabled && (
+        <div className="mt-3 space-y-2">
+          {selected && selected !== correctAnswer && (
+            <div className="px-4 py-3 rounded-xl bg-destructive/10 text-destructive font-body text-sm flex items-center justify-between">
+              <span>Your answer: {selected}</span>
+              <XCircle className="w-5 h-5 flex-shrink-0" />
+            </div>
+          )}
+          <div className="px-4 py-3 rounded-xl bg-sage-light text-primary ring-2 ring-primary font-body text-sm flex items-center justify-between">
+            <span>{correctAnswer}</span>
+            <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function shuffleArray<T>(arr: T[]): T[] {
   const shuffled = [...arr];
