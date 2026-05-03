@@ -297,9 +297,25 @@ export default function Sequence() {
 
         {/* Right side: Current sequence */}
         <section className="flex flex-col min-h-0 rounded-xl border border-border bg-card/40">
-          <div className="p-3 border-b border-border flex items-center justify-between">
-            <h2 className="font-display text-base font-semibold">Your sequence</h2>
-            <p className="text-xs text-muted-foreground font-body">Drag to reorder</p>
+          <div className="p-3 border-b border-border flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <h2 className="font-display text-base font-semibold">Your sequence</h2>
+              <p className="text-xs text-muted-foreground font-body">Drag to reorder</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <span className="text-xs text-muted-foreground font-body self-center">Load preset:</span>
+              {PRESET_SEQUENCES.map((preset) => (
+                <button
+                  key={preset.id}
+                  onClick={() => loadPreset(preset)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sage-light text-foreground hover:bg-primary hover:text-primary-foreground transition-colors text-xs font-body"
+                  title={`${preset.description} · ${preset.poseIds.length} poses`}
+                >
+                  <Sparkles className="w-3 h-3" />
+                  {preset.name}
+                </button>
+              ))}
+            </div>
           </div>
           <div className="flex-1 overflow-y-auto p-3">
             {sequence.length === 0 ? (
