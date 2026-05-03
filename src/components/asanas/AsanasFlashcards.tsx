@@ -93,7 +93,7 @@ export default function AsanasFlashcards() {
         >
           All
         </button>
-        {CATEGORIES.map(({ value, label, emoji }) => (
+        {CATEGORIES.map(({ value, label }) => (
           <button
             key={value}
             onClick={() => {
@@ -105,14 +105,13 @@ export default function AsanasFlashcards() {
               category === value ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
             }`}
           >
-            {emoji} {label}
+            {label}
           </button>
         ))}
       </div>
 
       {!current ? (
         <div className="text-center py-16 px-5">
-          <p className="text-3xl mb-2">⭐</p>
           <p className="font-body text-sm text-muted-foreground">
             {starredOnly
               ? "No starred poses yet. Star some from Browse first."

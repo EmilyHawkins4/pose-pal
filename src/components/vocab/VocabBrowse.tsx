@@ -109,7 +109,7 @@ export default function VocabBrowse() {
           return (
             <section key={cat}>
               <h2 className="font-display text-lg font-semibold mb-2 flex items-center gap-2">
-                <span>{meta.emoji}</span> {meta.label}
+                {meta.label}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {items.map((r, i) => {

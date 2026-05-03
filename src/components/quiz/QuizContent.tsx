@@ -113,18 +113,17 @@ interface ModeMeta {
   id: QuizMode;
   title: string;
   description: string;
-  emoji: string;
   group: "asanas" | "roots";
 }
 
 const ALL_MODES: ModeMeta[] = [
-  { id: "image-to-english", title: "Picture ↔ English", description: "See the pose, name it in English", emoji: "🖼️", group: "asanas" },
-  { id: "image-to-sanskrit", title: "Picture ↔ Sanskrit", description: "See the pose, name it in Sanskrit", emoji: "🧘", group: "asanas" },
-  { id: "english-to-sanskrit", title: "English ↔ Sanskrit", description: "Translate between English and Sanskrit", emoji: "🔤", group: "asanas" },
-  { id: "mixed-all", title: "Mixed (everything)", description: "Every possible combination", emoji: "🎲", group: "asanas" },
-  { id: "roots-sanskrit-to-meaning", title: "Root → Meaning", description: "What does this Sanskrit root mean?", emoji: "🌱", group: "roots" },
-  { id: "roots-meaning-to-sanskrit", title: "Meaning → Root", description: "What's the Sanskrit for this meaning?", emoji: "🪷", group: "roots" },
-  { id: "roots-mixed", title: "Mixed roots", description: "Both directions", emoji: "🎲", group: "roots" },
+  { id: "image-to-english", title: "Picture ↔ English", description: "See the pose, name it in English", group: "asanas" },
+  { id: "image-to-sanskrit", title: "Picture ↔ Sanskrit", description: "See the pose, name it in Sanskrit", group: "asanas" },
+  { id: "english-to-sanskrit", title: "English ↔ Sanskrit", description: "Translate between English and Sanskrit", group: "asanas" },
+  { id: "mixed-all", title: "Mixed (everything)", description: "Every possible combination", group: "asanas" },
+  { id: "roots-sanskrit-to-meaning", title: "Root → Meaning", description: "What does this Sanskrit root mean?", group: "roots" },
+  { id: "roots-meaning-to-sanskrit", title: "Meaning → Root", description: "What's the Sanskrit for this meaning?", group: "roots" },
+  { id: "roots-mixed", title: "Mixed roots", description: "Both directions", group: "roots" },
 ];
 
 function generateQuiz(mode: QuizMode, count: number = 10, starredIds?: string[]): QuizQuestion[] {
@@ -312,9 +311,6 @@ export default function QuizContent({ scope }: Props) {
                 insufficientStarred ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >
-              <div className="w-12 h-12 rounded-xl bg-sage-light flex items-center justify-center text-2xl flex-shrink-0">
-                {m.emoji}
-              </div>
               <div className="flex-1 min-w-0">
                 <p className="font-display text-lg font-semibold text-foreground">{m.title}</p>
                 <p className="font-body text-xs text-muted-foreground mt-0.5">{m.description}</p>
@@ -359,7 +355,7 @@ export default function QuizContent({ scope }: Props) {
             {score} out of {questions.length} correct
           </p>
           <p className="font-display text-lg mt-3">
-            {pct >= 80 ? "Amazing! 🎉" : pct >= 50 ? "Good effort! 💪" : "Keep practicing! 🧘"}
+            {pct >= 80 ? "Amazing!" : pct >= 50 ? "Good effort!" : "Keep practicing!"}
           </p>
           <div className="flex gap-3 justify-center mt-6">
             <button
