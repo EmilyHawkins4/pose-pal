@@ -101,7 +101,7 @@ export default function VocabFlashcards() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="w-full max-w-sm relative"
+                className="w-full max-w-2xl relative"
               >
                 <button
                   onClick={(e) => {
@@ -119,7 +119,7 @@ export default function VocabFlashcards() {
                 </button>
                 <button
                   onClick={() => setFlipped(!flipped)}
-                  className="w-full aspect-[3/4] rounded-2xl bg-card shadow-elevated overflow-hidden cursor-pointer focus:outline-none"
+                  className="w-full aspect-[16/9] rounded-2xl bg-card shadow-elevated overflow-hidden cursor-pointer focus:outline-none"
                 >
                   <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center">
                     {!flipped ? (
