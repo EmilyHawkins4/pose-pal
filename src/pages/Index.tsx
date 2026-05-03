@@ -81,8 +81,8 @@ export default function Index() {
                 to={`/pose/${pose.id}`}
                 className="flex-shrink-0 w-24 text-center"
               >
-                <div className="w-20 h-20 mx-auto rounded-xl bg-sage-light flex items-center justify-center text-3xl shadow-soft">
-                  {pose.emoji}
+                <div className="w-20 h-20 mx-auto rounded-xl bg-sage-light flex items-center justify-center p-2 shadow-soft">
+                  <img src={pose.image} alt={pose.englishName} className="max-h-full max-w-full object-contain" />
                 </div>
                 <p className="text-xs font-body mt-1.5 text-foreground truncate">{pose.englishName}</p>
               </Link>

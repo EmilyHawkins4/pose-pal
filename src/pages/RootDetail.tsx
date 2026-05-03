@@ -57,7 +57,7 @@ export default function RootDetail() {
           className="rounded-3xl bg-sage-light p-6 text-center"
         >
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-background/70 text-xs font-body text-foreground/70">
-            <span>{meta.emoji}</span> {meta.label}
+            {meta.label}
           </span>
           <h1 className="font-display text-4xl font-bold mt-3 italic">{root.sanskrit}</h1>
           <p className="font-body text-sm text-foreground/70 mt-1 inline-flex items-center gap-1.5">

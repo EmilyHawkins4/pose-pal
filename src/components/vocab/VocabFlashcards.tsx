@@ -80,7 +80,6 @@ export default function VocabFlashcards() {
 
       {!current ? (
         <div className="text-center py-16 px-5">
-          <p className="text-3xl mb-2">⭐</p>
           <p className="font-body text-sm text-muted-foreground">
             {starredOnly
               ? "No starred roots yet. Star some from Browse first."
