@@ -223,8 +223,12 @@ export default function Sequence() {
   const addPose = (poseId: string) => {
     setSequence((s) => [
       ...s,
-      { uid: `${poseId}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, poseId },
+      { uid: makeUid(poseId, s.length), poseId },
     ]);
+  };
+
+  const loadPreset = (preset: typeof PRESET_SEQUENCES[number]) => {
+    setSequence(preset.poseIds.map((poseId, i) => ({ uid: makeUid(poseId, i), poseId })));
   };
 
   const removePose = (uid: string) => {
