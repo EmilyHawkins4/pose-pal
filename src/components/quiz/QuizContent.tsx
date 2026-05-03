@@ -425,20 +425,18 @@ export default function QuizContent({ scope }: Props) {
             )}
             <p className="font-display text-xl font-semibold text-center mb-6">{getPromptText()}</p>
 
-            <div className={imageOptions ? "grid grid-cols-2 gap-3 max-w-md mx-auto" : "space-y-3 max-w-sm mx-auto"}>
-              {question.options.map((option) => {
-                const isCorrect = option === question.correctAnswer;
-                const isSelected = option === selected;
-
-                let optionStyle = "bg-card shadow-soft hover:shadow-card text-foreground";
-                if (answered) {
-                  if (isCorrect) optionStyle = "bg-sage-light text-primary ring-2 ring-primary";
-                  else if (isSelected && !isCorrect)
-                    optionStyle = "bg-destructive/10 text-destructive ring-2 ring-destructive";
-                  else optionStyle = "bg-muted text-muted-foreground opacity-60";
-                }
-
-                if (imageOptions) {
+            {imageOptions ? (
+              <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
+                {question.options.map((option) => {
+                  const isCorrect = option === question.correctAnswer;
+                  const isSelected = option === selected;
+                  let optionStyle = "bg-card shadow-soft hover:shadow-card text-foreground";
+                  if (answered) {
+                    if (isCorrect) optionStyle = "bg-sage-light text-primary ring-2 ring-primary";
+                    else if (isSelected && !isCorrect)
+                      optionStyle = "bg-destructive/10 text-destructive ring-2 ring-destructive";
+                    else optionStyle = "bg-muted text-muted-foreground opacity-60";
+                  }
                   const optPose = poses.find((p) => p.id === option);
                   return (
                     <button
@@ -461,24 +459,37 @@ export default function QuizContent({ scope }: Props) {
                       )}
                     </button>
                   );
+                })}
+              </div>
+            ) : (
+              (() => {
+                let candidates: string[] = [];
+                let placeholder = "Type to search…";
+                if (question.type === "image-to-english" || question.type === "sanskrit-to-english") {
+                  candidates = poses.map((p) => p.englishName);
+                  placeholder = "Search English names…";
+                } else if (question.type === "image-to-sanskrit" || question.type === "english-to-sanskrit") {
+                  candidates = poses.map((p) => p.sanskritName);
+                  placeholder = "Search Sanskrit names…";
+                } else if (question.type === "roots-sanskrit-to-meaning") {
+                  candidates = sanskritRoots.map((r) => r.meaning);
+                  placeholder = "Search meanings…";
+                } else if (question.type === "roots-meaning-to-sanskrit") {
+                  candidates = sanskritRoots.map((r) => r.sanskrit);
+                  placeholder = "Search Sanskrit roots…";
                 }
-
                 return (
-                  <button
-                    key={option}
-                    onClick={() => handleSelect(option)}
+                  <SearchAnswer
+                    candidates={candidates}
+                    onSelect={handleSelect}
                     disabled={answered}
-                    className={`w-full px-4 py-3.5 rounded-xl font-body text-sm font-medium text-left transition-all flex items-center justify-between ${optionStyle}`}
-                  >
-                    <span>{option}</span>
-                    {answered && isCorrect && <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0" />}
-                    {answered && isSelected && !isCorrect && (
-                      <XCircle className="w-5 h-5 text-destructive flex-shrink-0" />
-                    )}
-                  </button>
+                    selected={selected}
+                    correctAnswer={question.correctAnswer}
+                    placeholder={placeholder}
+                  />
                 );
-              })}
-            </div>
+              })()
+            )}
 
             {answered && (
               <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-6 text-center">
