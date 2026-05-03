@@ -624,13 +624,18 @@ export function getPosesByCategory(category: PoseCategory): YogaPose[] {
   return poses.filter(p => p.category === category);
 }
 
+/** Normalize text for diacritic-insensitive search: NFD decompose, strip combining marks, lowercase. */
+function normalizeForSearch(s: string): string {
+  return s.normalize("NFD").replace(/\p{Mn}/gu, "").toLowerCase();
+}
+
 export function searchPoses(query: string): YogaPose[] {
-  const q = query.toLowerCase().trim();
+  const q = normalizeForSearch(query.trim());
   if (!q) return poses;
   return poses.filter(
     p =>
-      p.englishName.toLowerCase().includes(q) ||
-      p.sanskritName.toLowerCase().includes(q) ||
-      p.category.toLowerCase().includes(q)
+      normalizeForSearch(p.englishName).includes(q) ||
+      normalizeForSearch(p.sanskritName).includes(q) ||
+      normalizeForSearch(p.category).includes(q)
   );
 }
