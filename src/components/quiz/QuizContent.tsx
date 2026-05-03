@@ -1,10 +1,76 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { poses } from "@/data/poses";
 import { sanskritRoots } from "@/data/sanskritRoots";
-import { CheckCircle2, XCircle, RotateCcw, Trophy, ArrowLeft, Star } from "lucide-react";
+import { CheckCircle2, XCircle, RotateCcw, Trophy, ArrowLeft, Star, Search } from "lucide-react";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useStarredRoots } from "@/hooks/useStarredRoots";
+
+function normalize(s: string): string {
+  return s.normalize("NFD").replace(/\p{Mn}/gu, "").toLowerCase().trim();
+}
+
+interface SearchAnswerProps {
+  candidates: string[];
+  onSelect: (value: string) => void;
+  disabled: boolean;
+  selected: string | null;
+  correctAnswer: string;
+  placeholder?: string;
+}
+
+function SearchAnswer({ candidates, onSelect, disabled, selected, correctAnswer, placeholder }: SearchAnswerProps) {
+  const [query, setQuery] = useState("");
+  const filtered = useMemo(() => {
+    const q = normalize(query);
+    if (!q) return [];
+    return candidates.filter((c) => normalize(c).includes(q)).slice(0, 6);
+  }, [query, candidates]);
+
+  return (
+    <div className="max-w-sm mx-auto">
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+        <input
+          type="text"
+          value={disabled ? selected ?? query : query}
+          onChange={(e) => setQuery(e.target.value)}
+          disabled={disabled}
+          placeholder={placeholder ?? "Type to search…"}
+          className="w-full pl-9 pr-3 py-3 rounded-xl bg-card shadow-soft font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-70"
+          autoFocus
+        />
+      </div>
+      {!disabled && filtered.length > 0 && (
+        <div className="mt-2 space-y-1.5">
+          {filtered.map((option) => (
+            <button
+              key={option}
+              onClick={() => onSelect(option)}
+              className="w-full px-4 py-2.5 rounded-lg bg-card shadow-soft hover:shadow-card text-left font-body text-sm text-foreground transition-all"
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      )}
+      {disabled && (
+        <div className="mt-3 space-y-2">
+          {selected && selected !== correctAnswer && (
+            <div className="px-4 py-3 rounded-xl bg-destructive/10 text-destructive font-body text-sm flex items-center justify-between">
+              <span>Your answer: {selected}</span>
+              <XCircle className="w-5 h-5 flex-shrink-0" />
+            </div>
+          )}
+          <div className="px-4 py-3 rounded-xl bg-sage-light text-primary ring-2 ring-primary font-body text-sm flex items-center justify-between">
+            <span>{correctAnswer}</span>
+            <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function shuffleArray<T>(arr: T[]): T[] {
   const shuffled = [...arr];
@@ -359,20 +425,18 @@ export default function QuizContent({ scope }: Props) {
             )}
             <p className="font-display text-xl font-semibold text-center mb-6">{getPromptText()}</p>
 
-            <div className={imageOptions ? "grid grid-cols-2 gap-3 max-w-md mx-auto" : "space-y-3 max-w-sm mx-auto"}>
-              {question.options.map((option) => {
-                const isCorrect = option === question.correctAnswer;
-                const isSelected = option === selected;
-
-                let optionStyle = "bg-card shadow-soft hover:shadow-card text-foreground";
-                if (answered) {
-                  if (isCorrect) optionStyle = "bg-sage-light text-primary ring-2 ring-primary";
-                  else if (isSelected && !isCorrect)
-                    optionStyle = "bg-destructive/10 text-destructive ring-2 ring-destructive";
-                  else optionStyle = "bg-muted text-muted-foreground opacity-60";
-                }
-
-                if (imageOptions) {
+            {imageOptions ? (
+              <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
+                {question.options.map((option) => {
+                  const isCorrect = option === question.correctAnswer;
+                  const isSelected = option === selected;
+                  let optionStyle = "bg-card shadow-soft hover:shadow-card text-foreground";
+                  if (answered) {
+                    if (isCorrect) optionStyle = "bg-sage-light text-primary ring-2 ring-primary";
+                    else if (isSelected && !isCorrect)
+                      optionStyle = "bg-destructive/10 text-destructive ring-2 ring-destructive";
+                    else optionStyle = "bg-muted text-muted-foreground opacity-60";
+                  }
                   const optPose = poses.find((p) => p.id === option);
                   return (
                     <button
@@ -395,24 +459,37 @@ export default function QuizContent({ scope }: Props) {
                       )}
                     </button>
                   );
+                })}
+              </div>
+            ) : (
+              (() => {
+                let candidates: string[] = [];
+                let placeholder = "Type to search…";
+                if (question.type === "image-to-english" || question.type === "sanskrit-to-english") {
+                  candidates = poses.map((p) => p.englishName);
+                  placeholder = "Search English names…";
+                } else if (question.type === "image-to-sanskrit" || question.type === "english-to-sanskrit") {
+                  candidates = poses.map((p) => p.sanskritName);
+                  placeholder = "Search Sanskrit names…";
+                } else if (question.type === "roots-sanskrit-to-meaning") {
+                  candidates = sanskritRoots.map((r) => r.meaning);
+                  placeholder = "Search meanings…";
+                } else if (question.type === "roots-meaning-to-sanskrit") {
+                  candidates = sanskritRoots.map((r) => r.sanskrit);
+                  placeholder = "Search Sanskrit roots…";
                 }
-
                 return (
-                  <button
-                    key={option}
-                    onClick={() => handleSelect(option)}
+                  <SearchAnswer
+                    candidates={candidates}
+                    onSelect={handleSelect}
                     disabled={answered}
-                    className={`w-full px-4 py-3.5 rounded-xl font-body text-sm font-medium text-left transition-all flex items-center justify-between ${optionStyle}`}
-                  >
-                    <span>{option}</span>
-                    {answered && isCorrect && <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0" />}
-                    {answered && isSelected && !isCorrect && (
-                      <XCircle className="w-5 h-5 text-destructive flex-shrink-0" />
-                    )}
-                  </button>
+                    selected={selected}
+                    correctAnswer={question.correctAnswer}
+                    placeholder={placeholder}
+                  />
                 );
-              })}
-            </div>
+              })()
+            )}
 
             {answered && (
               <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-6 text-center">
