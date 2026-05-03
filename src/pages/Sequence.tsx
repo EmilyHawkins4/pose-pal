@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { AnimatePresence } from "framer-motion";
-import { Plus, Play, Trash2, X, Search, GripVertical } from "lucide-react";
+import { Plus, Play, Trash2, X, Search, GripVertical, Sparkles } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -29,6 +29,58 @@ import { Input } from "@/components/ui/input";
 interface SequenceItem {
   uid: string;
   poseId: string;
+}
+
+const PRESET_SEQUENCES: { id: string; name: string; description: string; poseIds: string[] }[] = [
+  {
+    id: "sun-a",
+    name: "Sun Salutation A",
+    description: "Sūrya Namaskāra A",
+    poseIds: [
+      "mountain",
+      "forward-fold",
+      "halfway-lift",
+      "plank",
+      "low-plank",
+      "upward-dog",
+      "downward-dog",
+      "halfway-lift",
+      "forward-fold",
+      "mountain",
+    ],
+  },
+  {
+    id: "sun-b",
+    name: "Sun Salutation B",
+    description: "Sūrya Namaskāra B",
+    poseIds: [
+      "mountain",
+      "chair",
+      "forward-fold",
+      "halfway-lift",
+      "plank",
+      "low-plank",
+      "upward-dog",
+      "downward-dog",
+      "warrior-1",
+      "plank",
+      "low-plank",
+      "upward-dog",
+      "downward-dog",
+      "warrior-1",
+      "plank",
+      "low-plank",
+      "upward-dog",
+      "downward-dog",
+      "forward-fold",
+      "halfway-lift",
+      "mountain",
+    ],
+  },
+];
+
+function makeUid(poseId: string, i: number) {
+  return `${poseId}-${Date.now()}-${i}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
 function SortableRow({
@@ -171,8 +223,12 @@ export default function Sequence() {
   const addPose = (poseId: string) => {
     setSequence((s) => [
       ...s,
-      { uid: `${poseId}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, poseId },
+      { uid: makeUid(poseId, s.length), poseId },
     ]);
+  };
+
+  const loadPreset = (preset: typeof PRESET_SEQUENCES[number]) => {
+    setSequence(preset.poseIds.map((poseId, i) => ({ uid: makeUid(poseId, i), poseId })));
   };
 
   const removePose = (uid: string) => {
@@ -241,9 +297,25 @@ export default function Sequence() {
 
         {/* Right side: Current sequence */}
         <section className="flex flex-col min-h-0 rounded-xl border border-border bg-card/40">
-          <div className="p-3 border-b border-border flex items-center justify-between">
-            <h2 className="font-display text-base font-semibold">Your sequence</h2>
-            <p className="text-xs text-muted-foreground font-body">Drag to reorder</p>
+          <div className="p-3 border-b border-border flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <h2 className="font-display text-base font-semibold">Your sequence</h2>
+              <p className="text-xs text-muted-foreground font-body">Drag to reorder</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <span className="text-xs text-muted-foreground font-body self-center">Load preset:</span>
+              {PRESET_SEQUENCES.map((preset) => (
+                <button
+                  key={preset.id}
+                  onClick={() => loadPreset(preset)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sage-light text-foreground hover:bg-primary hover:text-primary-foreground transition-colors text-xs font-body"
+                  title={`${preset.description} · ${preset.poseIds.length} poses`}
+                >
+                  <Sparkles className="w-3 h-3" />
+                  {preset.name}
+                </button>
+              ))}
+            </div>
           </div>
           <div className="flex-1 overflow-y-auto p-3">
             {sequence.length === 0 ? (
