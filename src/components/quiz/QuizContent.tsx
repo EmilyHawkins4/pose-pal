@@ -264,6 +264,8 @@ export default function QuizContent({ scope }: Props) {
     setScore(0);
     setFinished(false);
     setAnswered(false);
+    setHintShown(false);
+    setHintsUsed(0);
   };
 
   const backToModes = () => {
