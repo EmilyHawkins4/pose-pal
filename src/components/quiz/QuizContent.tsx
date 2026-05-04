@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { poses } from "@/data/poses";
 import { sanskritRoots } from "@/data/sanskritRoots";
-import { CheckCircle2, XCircle, RotateCcw, Trophy, ArrowLeft, Star, Search } from "lucide-react";
+import { CheckCircle2, XCircle, RotateCcw, Trophy, ArrowLeft, Star, Search, Lightbulb } from "lucide-react";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useStarredRoots } from "@/hooks/useStarredRoots";
 
