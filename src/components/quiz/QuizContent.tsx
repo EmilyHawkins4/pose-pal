@@ -382,7 +382,7 @@ export default function QuizContent({ scope }: Props) {
           <Trophy className="w-16 h-16 text-accent mx-auto mb-4" />
           <h2 className="font-display text-4xl font-bold">{pct}%</h2>
           <p className="font-body text-muted-foreground mt-1">
-            {score} out of {questions.length} correct
+            {score} out of {questions.length} correct · {hintsUsed} hint{hintsUsed === 1 ? "" : "s"} used
           </p>
           <p className="font-display text-lg mt-3">
             {pct >= 80 ? "Amazing!" : pct >= 50 ? "Good effort!" : "Keep practicing!"}
