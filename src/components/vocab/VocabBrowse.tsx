@@ -125,7 +125,7 @@ export default function VocabBrowse() {
                     >
                       <Link
                         to={`/roots/${r.id}`}
-                        className="block p-3 pr-10 rounded-xl bg-card shadow-soft hover:shadow-card transition-shadow"
+                        className="block p-3 pr-10 rounded-xl bg-card border border-terracotta-light shadow-soft hover:shadow-card transition-shadow"
                       >
                         <div className="flex items-baseline justify-between gap-2">
                           <div className="flex items-baseline gap-2 min-w-0">
