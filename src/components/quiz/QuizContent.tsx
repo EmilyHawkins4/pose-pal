@@ -345,6 +345,32 @@ export default function QuizContent({ scope }: Props) {
       setCurrentQ((q) => q + 1);
       setSelected(null);
       setAnswered(false);
+      setHintShown(false);
+    }
+  };
+
+  const handleShowHint = () => {
+    if (hintShown || answered) return;
+    setHintShown(true);
+    setHintsUsed((n) => n + 1);
+  };
+
+  const getHint = (): { label: string; kind: "text" | "image"; value: string } | null => {
+    if (!pose) return null;
+    switch (question.type) {
+      case "image-to-english":
+        return { label: "Hint · Sanskrit name", kind: "text", value: pose.sanskritName };
+      case "image-to-sanskrit":
+        return { label: "Hint · English name", kind: "text", value: pose.englishName };
+      case "sanskrit-to-english":
+      case "english-to-sanskrit":
+        return { label: "Hint · Picture", kind: "image", value: pose.image };
+      case "english-to-image":
+        return { label: "Hint · Sanskrit name", kind: "text", value: pose.sanskritName };
+      case "sanskrit-to-image":
+        return { label: "Hint · English name", kind: "text", value: pose.englishName };
+      default:
+        return null;
     }
   };
 
