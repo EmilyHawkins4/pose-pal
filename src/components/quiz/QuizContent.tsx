@@ -449,7 +449,47 @@ export default function QuizContent({ scope }: Props) {
                 <img src={question.image} alt="Yoga pose" className="max-h-full max-w-full object-contain" />
               </div>
             )}
-            <p className="font-display text-xl font-semibold text-center mb-6">{getPromptText()}</p>
+            <p className="font-display text-xl font-semibold text-center mb-4">{getPromptText()}</p>
+
+            {(() => {
+              const hint = getHint();
+              if (!hint) return null;
+              return (
+                <div className="max-w-sm mx-auto mb-5 flex flex-col items-center">
+                  {!hintShown ? (
+                    <button
+                      onClick={handleShowHint}
+                      disabled={answered}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-body font-medium transition-colors ${
+                        answered
+                          ? "bg-muted text-muted-foreground opacity-60 cursor-not-allowed"
+                          : "bg-accent/20 text-accent-foreground hover:bg-accent/30"
+                      }`}
+                      aria-label="Show hint"
+                    >
+                      <Lightbulb className="w-3.5 h-3.5" /> Show hint
+                    </button>
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="w-full rounded-xl border border-dashed border-accent/50 bg-accent/10 px-4 py-3 flex flex-col items-center gap-2"
+                    >
+                      <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wide font-body font-medium text-muted-foreground">
+                        <Lightbulb className="w-3 h-3 fill-current text-accent" /> {hint.label}
+                      </div>
+                      {hint.kind === "image" ? (
+                        <div className="w-24 h-24 rounded-lg bg-background/60 flex items-center justify-center p-2">
+                          <img src={hint.value} alt="Hint" className="max-h-full max-w-full object-contain opacity-90" />
+                        </div>
+                      ) : (
+                        <p className="font-display text-base text-foreground">{hint.value}</p>
+                      )}
+                    </motion.div>
+                  )}
+                </div>
+              );
+            })()}
 
             {imageOptions ? (
               <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
