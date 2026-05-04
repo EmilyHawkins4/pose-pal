@@ -246,6 +246,8 @@ export default function QuizContent({ scope }: Props) {
   const [finished, setFinished] = useState(false);
   const [answered, setAnswered] = useState(false);
   const [starredOnly, setStarredOnly] = useState(false);
+  const [hintShown, setHintShown] = useState(false);
+  const [hintsUsed, setHintsUsed] = useState(0);
 
   const { bookmarks } = useBookmarks();
   const { starred: starredRoots } = useStarredRoots();
