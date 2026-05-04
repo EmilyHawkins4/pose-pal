@@ -445,54 +445,14 @@ export default function QuizContent({ scope }: Props) {
         <AnimatePresence mode="wait">
           <motion.div key={currentQ} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
             {showImage && (
-              <div className="w-40 h-40 mx-auto rounded-2xl bg-sage-light flex items-center justify-center mb-4 p-4">
+              <div className="w-28 h-28 mx-auto rounded-2xl bg-sage-light flex items-center justify-center mb-3 p-3">
                 <img src={question.image} alt="Yoga pose" className="max-h-full max-w-full object-contain" />
               </div>
             )}
-            <p className="font-display text-xl font-semibold text-center mb-4">{getPromptText()}</p>
-
-            {(() => {
-              const hint = getHint();
-              if (!hint) return null;
-              return (
-                <div className="max-w-sm mx-auto mb-5 flex flex-col items-center">
-                  {!hintShown ? (
-                    <button
-                      onClick={handleShowHint}
-                      disabled={answered}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-body font-medium transition-colors ${
-                        answered
-                          ? "bg-muted text-muted-foreground opacity-60 cursor-not-allowed"
-                          : "bg-accent/20 text-accent-foreground hover:bg-accent/30"
-                      }`}
-                      aria-label="Show hint"
-                    >
-                      <Lightbulb className="w-3.5 h-3.5" /> Show hint
-                    </button>
-                  ) : (
-                    <motion.div
-                      initial={{ opacity: 0, y: -4 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="w-full rounded-xl border border-dashed border-accent/50 bg-accent/10 px-4 py-3 flex flex-col items-center gap-2"
-                    >
-                      <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wide font-body font-medium text-muted-foreground">
-                        <Lightbulb className="w-3 h-3 fill-current text-accent" /> {hint.label}
-                      </div>
-                      {hint.kind === "image" ? (
-                        <div className="w-24 h-24 rounded-lg bg-background/60 flex items-center justify-center p-2">
-                          <img src={hint.value} alt="Hint" className="max-h-full max-w-full object-contain opacity-90" />
-                        </div>
-                      ) : (
-                        <p className="font-display text-base text-foreground">{hint.value}</p>
-                      )}
-                    </motion.div>
-                  )}
-                </div>
-              );
-            })()}
+            <p className="font-display text-lg font-semibold text-center mb-3">{getPromptText()}</p>
 
             {imageOptions ? (
-              <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
+              <div className="grid grid-cols-4 gap-2 max-w-2xl mx-auto">
                 {question.options.map((option) => {
                   const isCorrect = option === question.correctAnswer;
                   const isSelected = option === selected;
@@ -509,7 +469,7 @@ export default function QuizContent({ scope }: Props) {
                       key={option}
                       onClick={() => handleSelect(option)}
                       disabled={answered}
-                      className={`relative aspect-square rounded-xl p-3 flex items-center justify-center transition-all ${optionStyle}`}
+                      className={`relative aspect-square rounded-xl p-2 flex items-center justify-center transition-all ${optionStyle}`}
                       aria-label={optPose?.englishName}
                     >
                       <img
@@ -518,10 +478,10 @@ export default function QuizContent({ scope }: Props) {
                         className="max-h-full max-w-full object-contain"
                       />
                       {answered && isCorrect && (
-                        <CheckCircle2 className="absolute top-2 right-2 w-5 h-5 text-primary" />
+                        <CheckCircle2 className="absolute top-1 right-1 w-4 h-4 text-primary" />
                       )}
                       {answered && isSelected && !isCorrect && (
-                        <XCircle className="absolute top-2 right-2 w-5 h-5 text-destructive" />
+                        <XCircle className="absolute top-1 right-1 w-4 h-4 text-destructive" />
                       )}
                     </button>
                   );
@@ -557,8 +517,48 @@ export default function QuizContent({ scope }: Props) {
               })()
             )}
 
+            {(() => {
+              const hint = getHint();
+              if (!hint) return null;
+              return (
+                <div className="max-w-sm mx-auto mt-4 flex flex-col items-center">
+                  {!hintShown ? (
+                    <button
+                      onClick={handleShowHint}
+                      disabled={answered}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-body font-medium transition-colors ${
+                        answered
+                          ? "bg-muted text-muted-foreground opacity-60 cursor-not-allowed"
+                          : "bg-accent/20 text-accent-foreground hover:bg-accent/30"
+                      }`}
+                      aria-label="Show hint"
+                    >
+                      <Lightbulb className="w-3.5 h-3.5" /> Show hint
+                    </button>
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="w-full rounded-xl border border-dashed border-accent/50 bg-accent/10 px-4 py-2 flex flex-col items-center gap-1.5"
+                    >
+                      <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wide font-body font-medium text-muted-foreground">
+                        <Lightbulb className="w-3 h-3 fill-current text-accent" /> {hint.label}
+                      </div>
+                      {hint.kind === "image" ? (
+                        <div className="w-20 h-20 rounded-lg bg-background/60 flex items-center justify-center p-1.5">
+                          <img src={hint.value} alt="Hint" className="max-h-full max-w-full object-contain opacity-90" />
+                        </div>
+                      ) : (
+                        <p className="font-display text-base text-foreground">{hint.value}</p>
+                      )}
+                    </motion.div>
+                  )}
+                </div>
+              );
+            })()}
+
             {answered && (
-              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-6 text-center">
+              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-4 text-center">
                 <button
                   onClick={handleNext}
                   className="px-8 py-3 rounded-xl bg-primary text-primary-foreground font-body font-medium"
