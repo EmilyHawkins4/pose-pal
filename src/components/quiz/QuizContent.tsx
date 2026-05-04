@@ -517,8 +517,48 @@ export default function QuizContent({ scope }: Props) {
               })()
             )}
 
+            {(() => {
+              const hint = getHint();
+              if (!hint) return null;
+              return (
+                <div className="max-w-sm mx-auto mt-4 flex flex-col items-center">
+                  {!hintShown ? (
+                    <button
+                      onClick={handleShowHint}
+                      disabled={answered}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-body font-medium transition-colors ${
+                        answered
+                          ? "bg-muted text-muted-foreground opacity-60 cursor-not-allowed"
+                          : "bg-accent/20 text-accent-foreground hover:bg-accent/30"
+                      }`}
+                      aria-label="Show hint"
+                    >
+                      <Lightbulb className="w-3.5 h-3.5" /> Show hint
+                    </button>
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="w-full rounded-xl border border-dashed border-accent/50 bg-accent/10 px-4 py-2 flex flex-col items-center gap-1.5"
+                    >
+                      <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wide font-body font-medium text-muted-foreground">
+                        <Lightbulb className="w-3 h-3 fill-current text-accent" /> {hint.label}
+                      </div>
+                      {hint.kind === "image" ? (
+                        <div className="w-20 h-20 rounded-lg bg-background/60 flex items-center justify-center p-1.5">
+                          <img src={hint.value} alt="Hint" className="max-h-full max-w-full object-contain opacity-90" />
+                        </div>
+                      ) : (
+                        <p className="font-display text-base text-foreground">{hint.value}</p>
+                      )}
+                    </motion.div>
+                  )}
+                </div>
+              );
+            })()}
+
             {answered && (
-              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-6 text-center">
+              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-4 text-center">
                 <button
                   onClick={handleNext}
                   className="px-8 py-3 rounded-xl bg-primary text-primary-foreground font-body font-medium"
