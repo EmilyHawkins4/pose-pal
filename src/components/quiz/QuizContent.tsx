@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { poses } from "@/data/poses";
 import { sanskritRoots } from "@/data/sanskritRoots";
-import { CheckCircle2, XCircle, RotateCcw, Trophy, ArrowLeft, Star, Search } from "lucide-react";
+import { CheckCircle2, XCircle, RotateCcw, Trophy, ArrowLeft, Star, Search, Lightbulb } from "lucide-react";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useStarredRoots } from "@/hooks/useStarredRoots";
 
@@ -246,6 +246,8 @@ export default function QuizContent({ scope }: Props) {
   const [finished, setFinished] = useState(false);
   const [answered, setAnswered] = useState(false);
   const [starredOnly, setStarredOnly] = useState(false);
+  const [hintShown, setHintShown] = useState(false);
+  const [hintsUsed, setHintsUsed] = useState(0);
 
   const { bookmarks } = useBookmarks();
   const { starred: starredRoots } = useStarredRoots();
@@ -262,6 +264,8 @@ export default function QuizContent({ scope }: Props) {
     setScore(0);
     setFinished(false);
     setAnswered(false);
+    setHintShown(false);
+    setHintsUsed(0);
   };
 
   const backToModes = () => {
@@ -341,6 +345,32 @@ export default function QuizContent({ scope }: Props) {
       setCurrentQ((q) => q + 1);
       setSelected(null);
       setAnswered(false);
+      setHintShown(false);
+    }
+  };
+
+  const handleShowHint = () => {
+    if (hintShown || answered) return;
+    setHintShown(true);
+    setHintsUsed((n) => n + 1);
+  };
+
+  const getHint = (): { label: string; kind: "text" | "image"; value: string } | null => {
+    if (!pose) return null;
+    switch (question.type) {
+      case "image-to-english":
+        return { label: "Hint · Sanskrit name", kind: "text", value: pose.sanskritName };
+      case "image-to-sanskrit":
+        return { label: "Hint · English name", kind: "text", value: pose.englishName };
+      case "sanskrit-to-english":
+      case "english-to-sanskrit":
+        return { label: "Hint · Picture", kind: "image", value: pose.image };
+      case "english-to-image":
+        return { label: "Hint · Sanskrit name", kind: "text", value: pose.sanskritName };
+      case "sanskrit-to-image":
+        return { label: "Hint · English name", kind: "text", value: pose.englishName };
+      default:
+        return null;
     }
   };
 
@@ -352,7 +382,7 @@ export default function QuizContent({ scope }: Props) {
           <Trophy className="w-16 h-16 text-accent mx-auto mb-4" />
           <h2 className="font-display text-4xl font-bold">{pct}%</h2>
           <p className="font-body text-muted-foreground mt-1">
-            {score} out of {questions.length} correct
+            {score} out of {questions.length} correct · {hintsUsed} hint{hintsUsed === 1 ? "" : "s"} used
           </p>
           <p className="font-display text-lg mt-3">
             {pct >= 80 ? "Amazing!" : pct >= 50 ? "Good effort!" : "Keep practicing!"}
@@ -419,7 +449,47 @@ export default function QuizContent({ scope }: Props) {
                 <img src={question.image} alt="Yoga pose" className="max-h-full max-w-full object-contain" />
               </div>
             )}
-            <p className="font-display text-xl font-semibold text-center mb-6">{getPromptText()}</p>
+            <p className="font-display text-xl font-semibold text-center mb-4">{getPromptText()}</p>
+
+            {(() => {
+              const hint = getHint();
+              if (!hint) return null;
+              return (
+                <div className="max-w-sm mx-auto mb-5 flex flex-col items-center">
+                  {!hintShown ? (
+                    <button
+                      onClick={handleShowHint}
+                      disabled={answered}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-body font-medium transition-colors ${
+                        answered
+                          ? "bg-muted text-muted-foreground opacity-60 cursor-not-allowed"
+                          : "bg-accent/20 text-accent-foreground hover:bg-accent/30"
+                      }`}
+                      aria-label="Show hint"
+                    >
+                      <Lightbulb className="w-3.5 h-3.5" /> Show hint
+                    </button>
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="w-full rounded-xl border border-dashed border-accent/50 bg-accent/10 px-4 py-3 flex flex-col items-center gap-2"
+                    >
+                      <div className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wide font-body font-medium text-muted-foreground">
+                        <Lightbulb className="w-3 h-3 fill-current text-accent" /> {hint.label}
+                      </div>
+                      {hint.kind === "image" ? (
+                        <div className="w-24 h-24 rounded-lg bg-background/60 flex items-center justify-center p-2">
+                          <img src={hint.value} alt="Hint" className="max-h-full max-w-full object-contain opacity-90" />
+                        </div>
+                      ) : (
+                        <p className="font-display text-base text-foreground">{hint.value}</p>
+                      )}
+                    </motion.div>
+                  )}
+                </div>
+              );
+            })()}
 
             {imageOptions ? (
               <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
