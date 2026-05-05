@@ -23,10 +23,8 @@ export const sanskritRoots: SanskritRoot[] = [
 
   // ============ Numbers ============
   { id: "eka", sanskrit: "eka", simple: "eka", devanagari: "एक", pronunciation: "AY-kah", meaning: "one", category: "number", example: "Eka Pāda Rājakapotāsana (One-Legged Pigeon)", notes: "Almost always paired with pāda (leg/foot) to mark a one-legged variation.", relatedRootIds: ["pada"] },
-  { id: "dvi", sanskrit: "dvi", simple: "dvi", devanagari: "द्वि", pronunciation: "DVEE", meaning: "two", category: "number", example: "Dvi Pāda Viparīta Daṇḍāsana", notes: "Less common in beginner asanas but standard in inversions and arm balances." },
   { id: "tri", sanskrit: "tri", simple: "tri", devanagari: "त्रि", pronunciation: "TREE", meaning: "three", category: "number", example: "Trikoṇāsana (Triangle), Tri Pāda Adho Mukha Śvānāsana", notes: "Same root as the English 'tri-' prefix." },
   { id: "catur", sanskrit: "catur", simple: "catur", devanagari: "चतुर्", pronunciation: "CHAH-toor", meaning: "four", category: "number", example: "Caturaṅga Daṇḍāsana (Four-Limbed Staff)", notes: "Pronounced with a soft 'ch' — never 'kat-ur.'", relatedRootIds: ["anga"] },
-  { id: "sapta", sanskrit: "sapta", simple: "sapta", devanagari: "सप्त", pronunciation: "SAHP-tah", meaning: "seven", category: "number", example: "Sapta Cakra (seven chakras) — used in pranayama and philosophy" },
 
   // ============ Direction & Orientation ============
   { id: "utthita", sanskrit: "utthita", simple: "utthita", devanagari: "उत्थित", pronunciation: "oo-TEE-tah", meaning: "extended / stretched out", category: "direction", example: "Utthita Pārśvakoṇāsana (Extended Side Angle)", notes: "Cues active reach through the limbs — opposite of the more passive ardha." },
@@ -36,24 +34,18 @@ export const sanskritRoots: SanskritRoot[] = [
   { id: "urdhva", sanskrit: "ūrdhva", simple: "urdhva", devanagari: "ऊर्ध्व", pronunciation: "OORD-vah", meaning: "upward", category: "direction", example: "Ūrdhva Mukha Śvānāsana (Upward-Facing Dog)", notes: "Direct opposite of adho. The long ū is pronounced like 'oo' in 'pool.'", relatedRootIds: ["adho", "mukha"] },
   { id: "viparita", sanskrit: "viparīta", simple: "viparita", devanagari: "विपरीत", pronunciation: "vih-pah-REE-tah", meaning: "inverted / reversed", category: "direction", example: "Viparīta Vīrabhadrāsana (Reverse Warrior)", notes: "Means a deliberate reversal of orientation, not just upside-down." },
   { id: "supta", sanskrit: "supta", simple: "supta", devanagari: "सुप्त", pronunciation: "SOOP-tah", meaning: "reclining / lying down", category: "direction", example: "Supta Matsyendrāsana (Supine Twist)", notes: "Always indicates a supine (back-lying) version of a pose." },
-  { id: "prasarita", sanskrit: "prasārita", simple: "prasarita", devanagari: "प्रसारित", pronunciation: "prah-SAH-ree-tah", meaning: "spread / extended apart", category: "direction", example: "Prasārita Pādottānāsana (Wide-Legged Forward Fold)", notes: "Specifically refers to a wide stance — feet or hands spread apart." },
-  { id: "upavistha", sanskrit: "upaviṣṭa", simple: "upavistha", devanagari: "उपविष्ट", pronunciation: "oo-pah-VEESH-tah", meaning: "seated (with legs open)", category: "direction", example: "Upaviṣṭa Koṇāsana (Wide-Angle Seated Forward Fold)" },
-  { id: "pascima", sanskrit: "paścima", simple: "pascima", devanagari: "पश्चिम", pronunciation: "PUSH-chee-mah", meaning: "west / back of body", category: "direction", example: "Paścimottānāsana (Seated Forward Fold)", notes: "In yoga's directional system, the back body is 'west' (you face east at sunrise).", relatedRootIds: ["purva"] },
-  { id: "purva", sanskrit: "pūrva", simple: "purva", devanagari: "पूर्व", pronunciation: "POOR-vah", meaning: "east / front of body", category: "direction", example: "Pūrvottānāsana (Upward Plank / East-Facing Stretch)", relatedRootIds: ["pascima"] },
+  { id: "pascima", sanskrit: "paścima", simple: "pascima", devanagari: "पश्चिम", pronunciation: "PUSH-chee-mah", meaning: "west / back of body", category: "direction", example: "Paścimottānāsana (Seated Forward Fold)", notes: "In yoga's directional system, the back body is 'west' (you face east at sunrise)." },
 
   // ============ Body Parts ============
   { id: "pada", sanskrit: "pāda", simple: "pada", devanagari: "पाद", pronunciation: "PAH-dah", meaning: "foot / leg", category: "body", example: "Eka Pāda Rājakapotāsana, Tri Pāda Adho Mukha Śvānāsana", notes: "Same Indo-European root as 'pedal' and 'podiatry.'" },
-  { id: "hasta", sanskrit: "hasta", simple: "hasta", devanagari: "हस्त", pronunciation: "HAH-stah", meaning: "hand", category: "body", example: "Hasta Pādāsana (Hand-to-Foot Pose)" },
   { id: "mukha", sanskrit: "mukha", simple: "mukha", devanagari: "मुख", pronunciation: "MOO-kah", meaning: "face / facing", category: "body", example: "Adho Mukha Śvānāsana (Downward-Facing Dog)", notes: "When paired with adho/ūrdhva, indicates which way the front body faces." },
   { id: "sirsa", sanskrit: "śīrṣa", simple: "sirsa", devanagari: "शीर्ष", pronunciation: "SHEER-shah", meaning: "head", category: "body", example: "Śīrṣāsana (Headstand)", notes: "Note the 'sh' sound — the ś is sibilant." },
   { id: "anga", sanskrit: "aṅga", simple: "anga", devanagari: "अङ्ग", pronunciation: "UNG-gah", meaning: "limb", category: "body", example: "Caturaṅga Daṇḍāsana, Sarvāṅgāsana (Shoulderstand)", notes: "Also the word for 'limb' in 'aṣṭāṅga' (eight-limbed path)." },
-  { id: "janu", sanskrit: "jānu", simple: "janu", devanagari: "जानु", pronunciation: "JAH-noo", meaning: "knee", category: "body", example: "Jānu Śīrṣāsana (Head-to-Knee Pose)" },
-  { id: "jathara", sanskrit: "jaṭhara", simple: "jathara", devanagari: "जठर", pronunciation: "JUH-tah-rah", meaning: "belly / abdomen", category: "body", example: "Jaṭhara Parivartanāsana (Revolved Belly Pose)" },
 
   // ============ Shapes & Objects ============
   { id: "kona", sanskrit: "koṇa", simple: "kona", devanagari: "कोण", pronunciation: "KOH-nah", meaning: "angle", category: "shape", example: "Trikoṇāsana, Utkaṭa Koṇāsana (Horse)" },
   { id: "danda", sanskrit: "daṇḍa", simple: "danda", devanagari: "दण्ड", pronunciation: "DUN-dah", meaning: "staff / rod", category: "shape", example: "Caturaṅga Daṇḍāsana (Four-Limbed Staff)", notes: "Cues the body to be straight and rigid like a staff." },
-  { id: "candra", sanskrit: "candra", simple: "candra", devanagari: "चन्द्र", pronunciation: "CHUN-drah", meaning: "moon", category: "shape", example: "Ardha Candrāsana (Half Moon)", notes: "Pronounced with 'ch,' not 'k.' Paired with sūrya (sun) in classical pairings.", relatedRootIds: ["surya"] },
+  { id: "candra", sanskrit: "candra", simple: "candra", devanagari: "चन्द्र", pronunciation: "CHUN-drah", meaning: "moon", category: "shape", example: "Ardha Candrāsana (Half Moon)", notes: "Pronounced with 'ch,' not 'k.' Paired with sūrya (sun) in classical pairings." },
   { id: "setu", sanskrit: "setu", simple: "setu", devanagari: "सेतु", pronunciation: "SAY-too", meaning: "bridge", category: "shape", example: "Setu Bandha Sarvāṅgāsana (Bridge)", relatedRootIds: ["bandha"] },
   { id: "tada", sanskrit: "tāḍa", simple: "tada", devanagari: "ताड", pronunciation: "TAH-dah", meaning: "mountain", category: "shape", example: "Tāḍāsana (Mountain Pose)", notes: "The foundational posture — every standing pose starts here." },
   { id: "vrksa", sanskrit: "vṛkṣa", simple: "vrksa", devanagari: "वृक्ष", pronunciation: "VRIK-shah", meaning: "tree", category: "shape", example: "Vṛkṣāsana (Tree Pose)" },
@@ -82,7 +74,6 @@ export const sanskritRoots: SanskritRoot[] = [
   { id: "skanda", sanskrit: "skanda", simple: "skanda", devanagari: "स्कन्द", pronunciation: "SKAN-dah", meaning: "Skanda (god of war, son of Śiva)", category: "deity", example: "Skandāsana (Side Lunge)" },
 
   // ============ Qualities ============
-  { id: "baddha", sanskrit: "baddha", simple: "baddha", devanagari: "बद्ध", pronunciation: "BAH-dah", meaning: "bound", category: "quality", example: "Baddha Koṇāsana (Bound Angle)", notes: "Indicates a bind — usually hands clasped or wrapped.", relatedRootIds: ["bandha"] },
   { id: "salamba", sanskrit: "sālamba", simple: "salamba", devanagari: "सालम्ब", pronunciation: "SAH-lum-bah", meaning: "supported", category: "quality", example: "Sālamba Bhujaṅgāsana (Sphinx), Sālamba Sarvāṅgāsana (Supported Shoulderstand)", notes: "Marks a supported variation — typically with the forearms or props." },
   { id: "utkata", sanskrit: "utkaṭa", simple: "utkata", devanagari: "उत्कट", pronunciation: "OOT-kah-tah", meaning: "fierce / powerful", category: "quality", example: "Utkaṭāsana (Chair), Utkaṭa Koṇāsana (Horse)" },
   { id: "sarva", sanskrit: "sarva", simple: "sarva", devanagari: "सर्व", pronunciation: "SAR-vah", meaning: "all / whole", category: "quality", example: "Sarvāṅgāsana (Shoulderstand — 'all-limbs pose')", relatedRootIds: ["anga"] },
@@ -95,12 +86,7 @@ export const sanskritRoots: SanskritRoot[] = [
   { id: "cakra", sanskrit: "cakra", simple: "cakra", devanagari: "चक्र", pronunciation: "CHUK-rah", meaning: "wheel", category: "shape", example: "Ardha Cakrāsana (Half Wheel / standing backbend)", notes: "Pronounced with 'ch,' not 'k.' Same word as the energetic 'chakras.' Cues a rounded, wheel-like backbend." },
 
   // ============ Actions & Concepts ============
-  { id: "bandha", sanskrit: "bandha", simple: "bandha", devanagari: "बन्ध", pronunciation: "BUN-dah", meaning: "lock / bind / energetic seal", category: "action", example: "Setu Bandha Sarvāṅgāsana; also Mūla Bandha, Uḍḍīyāna Bandha", notes: "In pranayama, refers to the three energetic locks — root, abdominal, throat.", relatedRootIds: ["baddha"] },
-  { id: "namaskara", sanskrit: "namaskāra", simple: "namaskara", devanagari: "नमस्कार", pronunciation: "nuh-muh-SKAR-ah", meaning: "salutation / greeting", category: "concept", example: "Sūrya Namaskāra (Sun Salutation)", notes: "From namas (to bow) + kāra (action). The act of honoring." },
-  { id: "surya", sanskrit: "sūrya", simple: "surya", devanagari: "सूर्य", pronunciation: "SOOR-yah", meaning: "sun", category: "concept", example: "Sūrya Namaskāra (Sun Salutation)", relatedRootIds: ["candra", "namaskara"] },
-  { id: "prana", sanskrit: "prāṇa", simple: "prana", devanagari: "प्राण", pronunciation: "PRAH-nah", meaning: "life force / vital breath", category: "concept", example: "Prāṇāyāma (breath regulation)", notes: "Foundational concept across pranayama, philosophy, and energetics." },
-  { id: "vinyasa", sanskrit: "vinyāsa", simple: "vinyasa", devanagari: "विन्यास", pronunciation: "vin-YAH-sah", meaning: "to place in a special way / sequence", category: "concept", example: "Vinyāsa Krama (sequenced flow)", notes: "Specifically: linking breath to movement in an intentional sequence." },
-  { id: "drsti", sanskrit: "dṛṣṭi", simple: "drsti", devanagari: "दृष्टि", pronunciation: "DRISH-tee", meaning: "gaze / focal point", category: "concept", example: "Used in every Aṣṭāṅga pose to direct attention", notes: "Nine classical dṛṣṭis — a teaching tool for focus and alignment." },
+  { id: "bandha", sanskrit: "bandha", simple: "bandha", devanagari: "बन्ध", pronunciation: "BUN-dah", meaning: "lock / bind / energetic seal", category: "action", example: "Setu Bandha Sarvāṅgāsana; also Mūla Bandha, Uḍḍīyāna Bandha", notes: "In pranayama, refers to the three energetic locks — root, abdominal, throat." },
 ];
 
 // ============ Per-pose translation breakdowns ============
