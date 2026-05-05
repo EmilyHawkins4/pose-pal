@@ -101,12 +101,21 @@ interface ImageOption {
 
 interface QuizQuestion {
   poseId?: string;
+  rootId?: string;
   image?: string;
   promptOverride?: string;
   correctAnswer: string; // for text options: the text; for image options: the poseId
   options: string[]; // text labels OR poseIds when imageOptions=true
   imageOptions?: boolean;
   type: QuizMode;
+}
+
+function findExamplePosesForRoot(rootId: string): typeof poses {
+  const root = sanskritRoots.find((r) => r.id === rootId);
+  if (!root) return [];
+  const needle = normalize(root.simple);
+  const matches = poses.filter((p) => normalize(p.sanskritName).includes(needle));
+  return matches.slice(0, 3);
 }
 
 interface ModeMeta {
@@ -145,6 +154,7 @@ function generateQuiz(mode: QuizMode, count: number = 10, starredIds?: string[])
       if (actual === "roots-sanskrit-to-meaning") {
         const correctAnswer = root.meaning;
         return {
+          rootId: root.id,
           promptOverride: `What does "${root.sanskrit}" mean?`,
           correctAnswer,
           options: shuffleArray([correctAnswer, ...others.map((r) => r.meaning)]),
@@ -153,6 +163,7 @@ function generateQuiz(mode: QuizMode, count: number = 10, starredIds?: string[])
       } else {
         const correctAnswer = root.sanskrit;
         return {
+          rootId: root.id,
           promptOverride: `Which Sanskrit root means "${root.meaning}"?`,
           correctAnswer,
           options: shuffleArray([correctAnswer, ...others.map((r) => r.sanskrit)]),
@@ -355,7 +366,18 @@ export default function QuizContent({ scope }: Props) {
     setHintsUsed((n) => n + 1);
   };
 
-  const getHint = (): { label: string; kind: "text" | "image"; value: string } | null => {
+  type HintData =
+    | { label: string; kind: "text"; value: string }
+    | { label: string; kind: "image"; value: string }
+    | { label: string; kind: "poses"; poses: typeof poses };
+
+  const getHint = (): HintData | null => {
+    if (question.type.startsWith("roots-")) {
+      if (!question.rootId) return null;
+      const examples = findExamplePosesForRoot(question.rootId);
+      if (examples.length === 0) return null;
+      return { label: "Hint · Example poses using this root", kind: "poses", poses: examples };
+    }
     if (!pose) return null;
     switch (question.type) {
       case "image-to-english":
@@ -547,6 +569,17 @@ export default function QuizContent({ scope }: Props) {
                       {hint.kind === "image" ? (
                         <div className="w-20 h-20 rounded-lg bg-background/60 flex items-center justify-center p-1.5">
                           <img src={hint.value} alt="Hint" className="max-h-full max-w-full object-contain opacity-90" />
+                        </div>
+                      ) : hint.kind === "poses" ? (
+                        <div className="flex flex-wrap items-end justify-center gap-2 pt-1">
+                          {hint.poses.map((p) => (
+                            <div key={p.id} className="flex flex-col items-center gap-1 w-20">
+                              <div className="w-16 h-16 rounded-lg bg-background/60 flex items-center justify-center p-1">
+                                <img src={p.image} alt={p.englishName} className="max-h-full max-w-full object-contain opacity-90" />
+                              </div>
+                              <p className="font-body text-[10px] text-muted-foreground text-center leading-tight">{p.sanskritName}</p>
+                            </div>
+                          ))}
                         </div>
                       ) : (
                         <p className="font-display text-base text-foreground">{hint.value}</p>
