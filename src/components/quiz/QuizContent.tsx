@@ -570,6 +570,17 @@ export default function QuizContent({ scope }: Props) {
                         <div className="w-20 h-20 rounded-lg bg-background/60 flex items-center justify-center p-1.5">
                           <img src={hint.value} alt="Hint" className="max-h-full max-w-full object-contain opacity-90" />
                         </div>
+                      ) : hint.kind === "poses" ? (
+                        <div className="flex flex-wrap items-end justify-center gap-2 pt-1">
+                          {hint.poses.map((p) => (
+                            <div key={p.id} className="flex flex-col items-center gap-1 w-20">
+                              <div className="w-16 h-16 rounded-lg bg-background/60 flex items-center justify-center p-1">
+                                <img src={p.image} alt={p.englishName} className="max-h-full max-w-full object-contain opacity-90" />
+                              </div>
+                              <p className="font-body text-[10px] text-muted-foreground text-center leading-tight">{p.sanskritName}</p>
+                            </div>
+                          ))}
+                        </div>
                       ) : (
                         <p className="font-display text-base text-foreground">{hint.value}</p>
                       )}
