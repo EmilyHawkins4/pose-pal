@@ -1,10 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Layers, BookOpen, ListOrdered } from "lucide-react";
+import { Home, Layers, BookOpen, ListOrdered, Megaphone } from "lucide-react";
 
 const navItems = [
   { to: "/", icon: Home, label: "Home", match: ["/"], exact: true },
   { to: "/asanas", icon: Layers, label: "Asanas", match: ["/asanas", "/browse", "/flashcards", "/quiz", "/pose"] },
   { to: "/vocab", icon: BookOpen, label: "Vocab", match: ["/vocab", "/roots"] },
+  { to: "/cue", icon: Megaphone, label: "Cue", match: ["/cue"] },
   { to: "/sequence", icon: ListOrdered, label: "Sequence", match: ["/sequence"] },
 ];
 

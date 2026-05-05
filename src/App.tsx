@@ -8,6 +8,7 @@ import Asanas from "./pages/Asanas";
 import Vocab from "./pages/Vocab";
 import PoseDetail from "./pages/PoseDetail";
 import Sequence from "./pages/Sequence";
+import Cue from "./pages/Cue";
 import RootDetail from "./pages/RootDetail";
 import NotFound from "./pages/NotFound";
 
@@ -31,6 +32,9 @@ const App = () => (
           <Route path="/vocab" element={<Vocab />} />
           <Route path="/vocab/flashcards" element={<Vocab />} />
           <Route path="/vocab/quiz" element={<Vocab />} />
+
+          {/* Cue */}
+          <Route path="/cue" element={<Cue />} />
 
           {/* Sequence */}
           <Route path="/sequence" element={<Sequence />} />
