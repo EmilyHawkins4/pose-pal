@@ -33,6 +33,9 @@ const App = () => (
           <Route path="/vocab/flashcards" element={<Vocab />} />
           <Route path="/vocab/quiz" element={<Vocab />} />
 
+          {/* Cue */}
+          <Route path="/cue" element={<Cue />} />
+
           {/* Sequence */}
           <Route path="/sequence" element={<Sequence />} />
 
