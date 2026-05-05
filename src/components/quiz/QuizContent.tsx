@@ -101,12 +101,21 @@ interface ImageOption {
 
 interface QuizQuestion {
   poseId?: string;
+  rootId?: string;
   image?: string;
   promptOverride?: string;
   correctAnswer: string; // for text options: the text; for image options: the poseId
   options: string[]; // text labels OR poseIds when imageOptions=true
   imageOptions?: boolean;
   type: QuizMode;
+}
+
+function findExamplePosesForRoot(rootId: string): typeof poses {
+  const root = sanskritRoots.find((r) => r.id === rootId);
+  if (!root) return [];
+  const needle = normalize(root.simple);
+  const matches = poses.filter((p) => normalize(p.sanskritName).includes(needle));
+  return matches.slice(0, 3);
 }
 
 interface ModeMeta {
