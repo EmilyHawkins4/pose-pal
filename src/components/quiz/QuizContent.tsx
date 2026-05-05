@@ -154,6 +154,7 @@ function generateQuiz(mode: QuizMode, count: number = 10, starredIds?: string[])
       if (actual === "roots-sanskrit-to-meaning") {
         const correctAnswer = root.meaning;
         return {
+          rootId: root.id,
           promptOverride: `What does "${root.sanskrit}" mean?`,
           correctAnswer,
           options: shuffleArray([correctAnswer, ...others.map((r) => r.meaning)]),
@@ -162,6 +163,7 @@ function generateQuiz(mode: QuizMode, count: number = 10, starredIds?: string[])
       } else {
         const correctAnswer = root.sanskrit;
         return {
+          rootId: root.id,
           promptOverride: `Which Sanskrit root means "${root.meaning}"?`,
           correctAnswer,
           options: shuffleArray([correctAnswer, ...others.map((r) => r.sanskrit)]),
