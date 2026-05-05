@@ -8,6 +8,7 @@ import Asanas from "./pages/Asanas";
 import Vocab from "./pages/Vocab";
 import PoseDetail from "./pages/PoseDetail";
 import Sequence from "./pages/Sequence";
+import Cue from "./pages/Cue";
 import RootDetail from "./pages/RootDetail";
 import NotFound from "./pages/NotFound";
 
