@@ -366,7 +366,18 @@ export default function QuizContent({ scope }: Props) {
     setHintsUsed((n) => n + 1);
   };
 
-  const getHint = (): { label: string; kind: "text" | "image"; value: string } | null => {
+  type HintData =
+    | { label: string; kind: "text"; value: string }
+    | { label: string; kind: "image"; value: string }
+    | { label: string; kind: "poses"; poses: typeof poses };
+
+  const getHint = (): HintData | null => {
+    if (question.type.startsWith("roots-")) {
+      if (!question.rootId) return null;
+      const examples = findExamplePosesForRoot(question.rootId);
+      if (examples.length === 0) return null;
+      return { label: "Hint · Example poses using this root", kind: "poses", poses: examples };
+    }
     if (!pose) return null;
     switch (question.type) {
       case "image-to-english":
