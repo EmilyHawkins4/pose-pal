@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Layers, FlipHorizontal, Brain, Star, BookOpen, ListOrdered } from "lucide-react";
+import { Layers, Star, BookOpen, ListOrdered, Megaphone } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { poses } from "@/data/poses";
@@ -8,9 +8,9 @@ import BottomNav from "@/components/BottomNav";
 
 const features = [
   { to: "/asanas", icon: Layers, label: "Browse Asanas", desc: "Search the full catalog", color: "bg-sage-light text-primary" },
-  { to: "/asanas/flashcards", icon: FlipHorizontal, label: "Flashcards", desc: "Learn by flipping cards", color: "bg-terracotta-light text-accent" },
-  { to: "/asanas/quiz", icon: Brain, label: "Quiz", desc: "Test your knowledge", color: "bg-sage-light text-primary" },
-  { to: "/vocab", icon: BookOpen, label: "Sanskrit Vocab", desc: "Decode pose names", color: "bg-terracotta-light text-accent" },
+  { to: "/vocab", icon: BookOpen, label: "Browse Vocab", desc: "Decode Sanskrit roots", color: "bg-terracotta-light text-accent" },
+  { to: "/cue", icon: Megaphone, label: "Cue", desc: "Practice teaching cues", color: "bg-sage-light text-primary" },
+  { to: "/sequence", icon: ListOrdered, label: "Sequence", desc: "Build & play sequences", color: "bg-terracotta-light text-accent" },
 ];
 
 export default function Index() {
