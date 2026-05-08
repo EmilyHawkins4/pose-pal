@@ -6,12 +6,24 @@ import { useLanguagePreference } from "@/hooks/useLanguagePreference";
 import BottomNav from "@/components/BottomNav";
 import LanguageToggle from "@/components/LanguageToggle";
 import { Input } from "@/components/ui/input";
+import { categorizeCue, CATEGORY_META, type CueCategory } from "@/lib/cueCategory";
+
+const CATEGORY_ORDER: CueCategory[] = [
+  "setup",
+  "action",
+  "checkpoint",
+  "intention",
+  "gaze",
+  "breath",
+  "hold",
+];
 
 export default function Cue() {
   const { language, setLanguage } = useLanguagePreference();
   const [search, setSearch] = useState("");
   const [index, setIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<CueCategory | "all">("all");
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -31,6 +43,7 @@ export default function Cue() {
     const n = ((next % filtered.length) + filtered.length) % filtered.length;
     setIndex(n);
     setRevealed(false);
+    setActiveFilter("all");
   };
 
   const shuffle = () => {
@@ -110,17 +123,69 @@ export default function Cue() {
                     Reveal cues
                   </button>
                 ) : (
-                  <div className="rounded-xl border border-terracotta-light bg-terracotta-light/30 p-4">
-                    <p className="text-xs uppercase tracking-wide font-body text-accent font-semibold mb-2">
-                      Alignment cues
-                    </p>
+                  <div className="space-y-3">
+                    <div className="flex flex-wrap gap-1.5">
+                      <button
+                        onClick={() => setActiveFilter("all")}
+                        className={`text-xs font-body px-2.5 py-1 rounded-full border transition-colors ${
+                          activeFilter === "all"
+                            ? "bg-foreground text-background border-foreground"
+                            : "bg-background text-muted-foreground border-border hover:text-foreground"
+                        }`}
+                      >
+                        All
+                      </button>
+                      {CATEGORY_ORDER.map((cat) => {
+                        const count = pose.alignmentCues.filter(
+                          (c) => categorizeCue(c) === cat
+                        ).length;
+                        if (count === 0) return null;
+                        const meta = CATEGORY_META[cat];
+                        const active = activeFilter === cat;
+                        return (
+                          <button
+                            key={cat}
+                            onClick={() => setActiveFilter(cat)}
+                            title={meta.description}
+                            className={`text-xs font-body px-2.5 py-1 rounded-full border transition-colors inline-flex items-center gap-1.5 ${
+                              active
+                                ? meta.chipClass
+                                : "bg-background text-muted-foreground border-border hover:text-foreground"
+                            }`}
+                          >
+                            <span className={`w-1.5 h-1.5 rounded-full ${meta.dotClass}`} />
+                            {meta.label} <span className="opacity-60">{count}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
                     <ol className="space-y-2">
-                      {pose.alignmentCues.map((cue, i) => (
-                        <li key={i} className="flex gap-2 font-body text-sm">
-                          <span className="text-accent font-semibold">{i + 1}.</span>
-                          <span>{cue}</span>
-                        </li>
-                      ))}
+                      {pose.alignmentCues
+                        .map((cue, i) => ({ cue, i, cat: categorizeCue(cue) }))
+                        .filter(({ cat }) => activeFilter === "all" || cat === activeFilter)
+                        .map(({ cue, i, cat }) => {
+                          const meta = CATEGORY_META[cat];
+                          return (
+                            <li
+                              key={i}
+                              className="flex gap-3 font-body text-sm rounded-lg border border-border/60 bg-card p-3"
+                            >
+                              <span
+                                className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${meta.dotClass}`}
+                                aria-hidden
+                              />
+                              <div className="flex-1 min-w-0">
+                                <span
+                                  className={`inline-block text-[10px] uppercase tracking-wide font-semibold px-1.5 py-0.5 rounded border mb-1 ${meta.chipClass}`}
+                                >
+                                  {meta.label}
+                                </span>
+                                <p>{cue}</p>
+                              </div>
+                            </li>
+                          );
+                        })}
                     </ol>
                   </div>
                 )}
