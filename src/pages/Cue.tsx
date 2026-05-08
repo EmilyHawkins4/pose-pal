@@ -92,103 +92,107 @@ export default function Cue() {
               transition={{ duration: 0.2 }}
               className="rounded-2xl bg-card shadow-card overflow-hidden"
             >
-              <div className="bg-sage-light flex items-center justify-center p-6">
-                <img
-                  src={pose.image}
-                  alt={pose.englishName}
-                  className="max-h-48 object-contain"
-                />
-              </div>
-
-              <div className="p-5">
-                <div className="mb-4">
-                  {language === "sanskrit" ? (
-                    <h2 className="font-display text-2xl font-semibold">{pose.sanskritName}</h2>
-                  ) : language === "english" ? (
-                    <h2 className="font-display text-2xl font-semibold">{pose.englishName}</h2>
-                  ) : (
-                    <>
-                      <h2 className="font-display text-2xl font-semibold">{pose.englishName}</h2>
-                      <p className="font-body text-sm text-muted-foreground mt-0.5">{pose.sanskritName}</p>
-                    </>
-                  )}
+              <div className="flex flex-col md:flex-row">
+                {/* Image column */}
+                <div className="md:w-1/2 bg-sage-light flex items-center justify-center p-6 md:p-8 md:self-stretch">
+                  <img
+                    src={pose.image}
+                    alt={pose.englishName}
+                    className="max-h-48 md:max-h-[60vh] object-contain"
+                  />
                 </div>
 
-                {!revealed ? (
-                  <button
-                    onClick={() => setRevealed(true)}
-                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-primary text-primary-foreground font-body font-medium hover:bg-primary/90 transition-colors"
-                  >
-                    <Eye className="w-4 h-4" />
-                    Reveal cues
-                  </button>
-                ) : (
-                  <div className="space-y-3">
-                    <div className="flex flex-wrap gap-1.5">
-                      <button
-                        onClick={() => setActiveFilter("all")}
-                        className={`text-xs font-body px-2.5 py-1 rounded-full border transition-colors ${
-                          activeFilter === "all"
-                            ? "bg-foreground text-background border-foreground"
-                            : "bg-background text-muted-foreground border-border hover:text-foreground"
-                        }`}
-                      >
-                        All
-                      </button>
-                      {CATEGORY_ORDER.map((cat) => {
-                        const count = pose.alignmentCues.filter(
-                          (c) => categorizeCue(c) === cat
-                        ).length;
-                        if (count === 0) return null;
-                        const meta = CATEGORY_META[cat];
-                        const active = activeFilter === cat;
-                        return (
-                          <button
-                            key={cat}
-                            onClick={() => setActiveFilter(cat)}
-                            title={meta.description}
-                            className={`text-xs font-body px-2.5 py-1 rounded-full border transition-colors inline-flex items-center gap-1.5 ${
-                              active
-                                ? meta.chipClass
-                                : "bg-background text-muted-foreground border-border hover:text-foreground"
-                            }`}
-                          >
-                            <span className={`w-1.5 h-1.5 rounded-full ${meta.dotClass}`} />
-                            {meta.label} <span className="opacity-60">{count}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
+                {/* Details column */}
+                <div className="md:w-1/2 p-5 md:p-6 md:max-h-[70vh] md:overflow-y-auto">
+                  <div className="mb-4">
+                    {language === "sanskrit" ? (
+                      <h2 className="font-display text-2xl font-semibold">{pose.sanskritName}</h2>
+                    ) : language === "english" ? (
+                      <h2 className="font-display text-2xl font-semibold">{pose.englishName}</h2>
+                    ) : (
+                      <>
+                        <h2 className="font-display text-2xl font-semibold">{pose.englishName}</h2>
+                        <p className="font-body text-sm text-muted-foreground mt-0.5">{pose.sanskritName}</p>
+                      </>
+                    )}
+                  </div>
 
-                    <ol className="space-y-2">
-                      {pose.alignmentCues
-                        .map((cue, i) => ({ cue, i, cat: categorizeCue(cue) }))
-                        .filter(({ cat }) => activeFilter === "all" || cat === activeFilter)
-                        .map(({ cue, i, cat }) => {
+                  {!revealed ? (
+                    <button
+                      onClick={() => setRevealed(true)}
+                      className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-primary text-primary-foreground font-body font-medium hover:bg-primary/90 transition-colors"
+                    >
+                      <Eye className="w-4 h-4" />
+                      Reveal cues
+                    </button>
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="flex flex-wrap gap-1.5">
+                        <button
+                          onClick={() => setActiveFilter("all")}
+                          className={`text-xs font-body px-2.5 py-1 rounded-full border transition-colors ${
+                            activeFilter === "all"
+                              ? "bg-foreground text-background border-foreground"
+                              : "bg-background text-muted-foreground border-border hover:text-foreground"
+                          }`}
+                        >
+                          All
+                        </button>
+                        {CATEGORY_ORDER.map((cat) => {
+                          const count = pose.alignmentCues.filter(
+                            (c) => categorizeCue(c) === cat
+                          ).length;
+                          if (count === 0) return null;
                           const meta = CATEGORY_META[cat];
+                          const active = activeFilter === cat;
                           return (
-                            <li
-                              key={i}
-                              className="flex gap-3 font-body text-sm rounded-lg border border-border/60 bg-card p-3"
+                            <button
+                              key={cat}
+                              onClick={() => setActiveFilter(cat)}
+                              title={meta.description}
+                              className={`text-xs font-body px-2.5 py-1 rounded-full border transition-colors inline-flex items-center gap-1.5 ${
+                                active
+                                  ? meta.chipClass
+                                  : "bg-background text-muted-foreground border-border hover:text-foreground"
+                              }`}
                             >
-                              <span
-                                className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${meta.dotClass}`}
-                                aria-hidden
-                              />
-                              <div className="flex-1 min-w-0">
-                                <span
-                                  className={`inline-block text-[10px] uppercase tracking-wide font-semibold px-1.5 py-0.5 rounded border mb-1 ${meta.chipClass}`}
-                                >
-                                  {meta.label}
-                                </span>
-                                <p>{cue}</p>
-                              </div>
-                            </li>
+                              <span className={`w-1.5 h-1.5 rounded-full ${meta.dotClass}`} />
+                              {meta.label} <span className="opacity-60">{count}</span>
+                            </button>
                           );
                         })}
-                    </ol>
-                  </div>
-                )}
+                      </div>
+
+                      <ol className="space-y-2">
+                        {pose.alignmentCues
+                          .map((cue, i) => ({ cue, i, cat: categorizeCue(cue) }))
+                          .filter(({ cat }) => activeFilter === "all" || cat === activeFilter)
+                          .map(({ cue, i, cat }) => {
+                            const meta = CATEGORY_META[cat];
+                            return (
+                              <li
+                                key={i}
+                                className="flex gap-3 font-body text-sm rounded-lg border border-border/60 bg-card p-3"
+                              >
+                                <span
+                                  className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${meta.dotClass}`}
+                                  aria-hidden
+                                />
+                                <div className="flex-1 min-w-0">
+                                  <span
+                                    className={`inline-block text-[10px] uppercase tracking-wide font-semibold px-1.5 py-0.5 rounded border mb-1 ${meta.chipClass}`}
+                                  >
+                                    {meta.label}
+                                  </span>
+                                  <p>{cue}</p>
+                                </div>
+                              </li>
+                            );
+                          })}
+                      </ol>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="flex items-center justify-between border-t border-border px-3 py-2 bg-muted/30">
