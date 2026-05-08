@@ -23,6 +23,7 @@ export default function Cue() {
   const [search, setSearch] = useState("");
   const [index, setIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<CueCategory | "all">("all");
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
