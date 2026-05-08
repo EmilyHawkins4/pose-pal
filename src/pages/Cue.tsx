@@ -1,12 +1,14 @@
 import { useMemo, useState } from "react";
-import { Search, Eye, ChevronLeft, ChevronRight, Shuffle } from "lucide-react";
+import { Search, Eye, ChevronLeft, ChevronRight, Shuffle, Layers } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { poses } from "@/data/poses";
+import { sharedCues } from "@/data/sharedCues";
 import { useLanguagePreference } from "@/hooks/useLanguagePreference";
 import BottomNav from "@/components/BottomNav";
 import LanguageToggle from "@/components/LanguageToggle";
 import { Input } from "@/components/ui/input";
 import { categorizeCue, CATEGORY_META, type CueCategory } from "@/lib/cueCategory";
+import { Link } from "react-router-dom";
 
 const CATEGORY_ORDER: CueCategory[] = [
   "setup",
@@ -17,6 +19,8 @@ const CATEGORY_ORDER: CueCategory[] = [
   "breath",
   "hold",
 ];
+
+type Mode = "browse" | "shared";
 
 export default function Cue() {
   const { language, setLanguage } = useLanguagePreference();
