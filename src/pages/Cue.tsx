@@ -331,6 +331,7 @@ export default function Cue() {
           </AnimatePresence>
         )}
       </div>
+      )}
 
       <BottomNav />
     </div>
