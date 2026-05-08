@@ -6,6 +6,17 @@ import { useLanguagePreference } from "@/hooks/useLanguagePreference";
 import BottomNav from "@/components/BottomNav";
 import LanguageToggle from "@/components/LanguageToggle";
 import { Input } from "@/components/ui/input";
+import { categorizeCue, CATEGORY_META, type CueCategory } from "@/lib/cueCategory";
+
+const CATEGORY_ORDER: CueCategory[] = [
+  "setup",
+  "action",
+  "checkpoint",
+  "intention",
+  "gaze",
+  "breath",
+  "hold",
+];
 
 export default function Cue() {
   const { language, setLanguage } = useLanguagePreference();
