@@ -43,6 +43,7 @@ export default function Cue() {
     const n = ((next % filtered.length) + filtered.length) % filtered.length;
     setIndex(n);
     setRevealed(false);
+    setActiveFilter("all");
   };
 
   const shuffle = () => {
