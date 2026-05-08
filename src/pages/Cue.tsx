@@ -24,10 +24,17 @@ type Mode = "browse" | "shared";
 
 export default function Cue() {
   const { language, setLanguage } = useLanguagePreference();
+  const [mode, setMode] = useState<Mode>("browse");
   const [search, setSearch] = useState("");
   const [index, setIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [activeFilter, setActiveFilter] = useState<CueCategory | "all">("all");
+
+  const poseById = useMemo(() => {
+    const m = new Map<string, typeof poses[number]>();
+    poses.forEach((p) => m.set(p.id, p));
+    return m;
+  }, []);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
