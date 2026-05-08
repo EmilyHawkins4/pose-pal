@@ -1,12 +1,14 @@
 import { useMemo, useState } from "react";
-import { Search, Eye, ChevronLeft, ChevronRight, Shuffle } from "lucide-react";
+import { Search, Eye, ChevronLeft, ChevronRight, Shuffle, Layers } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { poses } from "@/data/poses";
+import { sharedCues } from "@/data/sharedCues";
 import { useLanguagePreference } from "@/hooks/useLanguagePreference";
 import BottomNav from "@/components/BottomNav";
 import LanguageToggle from "@/components/LanguageToggle";
 import { Input } from "@/components/ui/input";
 import { categorizeCue, CATEGORY_META, type CueCategory } from "@/lib/cueCategory";
+import { Link } from "react-router-dom";
 
 const CATEGORY_ORDER: CueCategory[] = [
   "setup",
@@ -18,12 +20,21 @@ const CATEGORY_ORDER: CueCategory[] = [
   "hold",
 ];
 
+type Mode = "browse" | "shared";
+
 export default function Cue() {
   const { language, setLanguage } = useLanguagePreference();
+  const [mode, setMode] = useState<Mode>("browse");
   const [search, setSearch] = useState("");
   const [index, setIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [activeFilter, setActiveFilter] = useState<CueCategory | "all">("all");
+
+  const poseById = useMemo(() => {
+    const m = new Map<string, typeof poses[number]>();
+    poses.forEach((p) => m.set(p.id, p));
+    return m;
+  }, []);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -59,23 +70,116 @@ export default function Cue() {
           <LanguageToggle language={language} onChange={setLanguage} />
         </div>
         <p className="font-body text-sm text-muted-foreground mb-4">
-          Practice cueing each pose. Picture the student, then reveal the alignment cues.
+          {mode === "browse"
+            ? "Practice cueing each pose. Picture the student, then reveal the alignment cues."
+            : "One cue, many poses. See how a single instruction transfers across the practice."}
         </p>
 
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setIndex(0);
-              setRevealed(false);
-            }}
-            placeholder="Search poses…"
-            className="pl-9"
-          />
+        <div className="inline-flex rounded-lg border border-border bg-muted/40 p-1 mb-4">
+          <button
+            onClick={() => setMode("browse")}
+            className={`px-3 py-1.5 rounded-md text-sm font-body transition-colors ${
+              mode === "browse"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            By pose
+          </button>
+          <button
+            onClick={() => setMode("shared")}
+            className={`px-3 py-1.5 rounded-md text-sm font-body transition-colors inline-flex items-center gap-1.5 ${
+              mode === "shared"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Layers className="w-3.5 h-3.5" />
+            Shared cues
+          </button>
         </div>
+
+        {mode === "browse" && (
+          <div className="relative mb-4">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setIndex(0);
+                setRevealed(false);
+              }}
+              placeholder="Search poses…"
+              className="pl-9"
+            />
+          </div>
+        )}
       </div>
+
+      {mode === "shared" ? (
+        <div className="px-5 space-y-4">
+          {sharedCues.map((sc) => {
+            const meta = CATEGORY_META[sc.category];
+            const matched = sc.poseIds
+              .map((id) => poseById.get(id))
+              .filter((p): p is NonNullable<typeof p> => Boolean(p));
+            return (
+              <motion.div
+                key={sc.id}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-2xl bg-card shadow-card overflow-hidden"
+              >
+                <div className="p-5">
+                  <span
+                    className={`inline-block text-[10px] uppercase tracking-wide font-semibold px-1.5 py-0.5 rounded border mb-2 ${meta.chipClass}`}
+                  >
+                    {meta.label}
+                  </span>
+                  <h3 className="font-display text-xl font-semibold leading-snug">
+                    “{sc.cue}”
+                  </h3>
+                  <p className="font-body text-sm text-muted-foreground mt-2">
+                    {sc.teachingNote}
+                  </p>
+                </div>
+                <div className="border-t border-border bg-muted/20 px-3 py-3">
+                  <p className="text-[11px] uppercase tracking-wide font-body text-muted-foreground font-semibold px-2 mb-2">
+                    Applies to {matched.length} poses
+                  </p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                    {matched.map((p) => (
+                      <Link
+                        key={p.id}
+                        to={`/asanas/${p.id}`}
+                        className="flex items-center gap-2 rounded-lg bg-background hover:bg-sage-light/40 border border-border/60 p-2 transition-colors"
+                      >
+                        <div className="w-10 h-10 rounded-md bg-sage-light flex items-center justify-center shrink-0">
+                          <img
+                            src={p.image}
+                            alt={p.englishName}
+                            className="max-h-9 object-contain"
+                          />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-body text-xs font-medium truncate">
+                            {language === "sanskrit" ? p.sanskritName : p.englishName}
+                          </p>
+                          {language === "both" && (
+                            <p className="font-body text-[10px] text-muted-foreground truncate italic">
+                              {p.sanskritName}
+                            </p>
+                          )}
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      ) : (
 
       <div className="px-5">
         {!pose ? (
@@ -227,6 +331,7 @@ export default function Cue() {
           </AnimatePresence>
         )}
       </div>
+      )}
 
       <BottomNav />
     </div>
