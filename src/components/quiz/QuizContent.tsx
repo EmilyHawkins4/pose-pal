@@ -577,7 +577,7 @@ export default function QuizContent({ scope }: Props) {
                               <div className="w-16 h-16 rounded-lg bg-background/60 flex items-center justify-center p-1">
                                 <img src={p.image} alt={p.englishName} className="max-h-full max-w-full object-contain opacity-90" />
                               </div>
-                              <p className="font-body text-[10px] text-muted-foreground text-center leading-tight">{p.sanskritName}</p>
+                              <p className="font-body text-[10px] text-muted-foreground text-center leading-tight">{p.englishName}</p>
                             </div>
                           ))}
                         </div>
